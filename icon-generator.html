@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ATPizza Icon Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .icon-container {
+            width: 1024px;
+            height: 1024px;
+            background: #000000;
+            border-radius: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+        }
+        .logo {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .instructions {
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>🎯 Gerador de Ícone ATPizza</h2>
+        <p>Este é o seu ícone otimizado com fundo preto sólido (1024x1024px)</p>
+        <p>Para baixar: <strong>Clique com botão direito na imagem → "Salvar imagem como" → Salve como PNG</strong></p>
+        <p>Use este arquivo para substituir os ícones do seu app</p>
+    </div>
+
+    <div class="icon-container" id="iconContainer">
+        <img src="images/logo.png" alt="ATPizza Logo" class="logo" id="logoImg">
+    </div>
+
+    <button class="download-btn" onclick="downloadIcon()">📥 Preparar para Download</button>
+
+    <script>
+        // Garante que o fundo seja sempre preto sólido
+        document.getElementById('iconContainer').style.backgroundColor = '#000000';
+        
+        function downloadIcon() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            
+            // Força fundo preto sólido
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            const img = document.getElementById('logoImg');
+            
+            // Desenha o logo centralizado
+            const logoWidth = 800; // 80% do tamanho
+            const logoHeight = 400; // Proporção estimada
+            const x = (1024 - logoWidth) / 2;
+            const y = (1024 - logoHeight) / 2;
+            
+            img.onload = function() {
+                ctx.drawImage(img, x, y, logoWidth, logoHeight);
+                
+                // Força download
+                const link = document.createElement('a');
+                link.download = 'atpizza-icon-optimized.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            };
+            
+            if (img.complete) {
+                img.onload();
+            }
+        }
+        
+        // Carrega a imagem quando a página abrir
+        window.onload = function() {
+            const logo = document.getElementById('logoImg');
+            logo.src = 'images/logo.png';
+        };
+    </script>
+</body>
+</html>

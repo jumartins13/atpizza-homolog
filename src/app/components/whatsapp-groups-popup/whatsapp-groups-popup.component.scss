@@ -1,0 +1,162 @@
+@import '../../../styles';
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+
+    .popup-content {
+      transform: scale(1);
+    }
+  }
+}
+
+.popup-content {
+  background: #1a1a1a;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow: hidden;
+  border: 1px solid #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-3xs; // 16px
+  border-bottom: 1px solid #333;
+
+  h3 {
+    margin: 0;
+    color: white;
+    font-size: 18px;
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #333;
+    color: #fff;
+  }
+}
+
+.groups-list {
+  max-height: 400px;
+  overflow-y: auto;
+
+  // Scrollbar styling
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+
+    &:hover {
+      background: #444;
+    }
+  }
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm; // 12px
+  padding: 15px;
+  margin-bottom: $spacing-nano; // 8px
+  background: #252525;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  img {
+    flex-shrink: 0;
+  }
+
+  span:first-of-type {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .arrow {
+    color: #25d366;
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+.no-groups {
+  text-align: center;
+  padding: 40px $spacing-3xs; // 16px
+  color: #666;
+
+  p {
+    margin: 0;
+    font-style: italic;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .popup-content {
+    width: 95%;
+    margin: $spacing-3xs; // 16px
+  }
+
+  .popup-header {
+    padding: 15px;
+
+    h3 {
+      font-size: 16px;
+    }
+  }
+
+  .group-item {
+    padding: $spacing-sm; // 12px
+    font-size: 14px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

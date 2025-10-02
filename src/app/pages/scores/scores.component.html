@@ -1,0 +1,34 @@
+<div class="header">
+  <div class="logo middle"></div>
+  <div class="tabs">
+    <div class="tabs__status">
+      <a
+        class="tabs__status__title"
+        routerLink="pending"
+        routerLinkActive="active"
+      >
+        Pendentes
+      </a>
+    </div>
+    <div class="tabs__status">
+      <a
+        class="tabs__status__title"
+        routerLink="completed"
+        routerLinkActive="active"
+      >
+        Realizados
+      </a>
+    </div>
+  </div>
+  @if (groupsLoading) {
+    <app-select-skeleton></app-select-skeleton>
+  } @else {
+    <app-select
+      [items]="groups"
+      [selectedItem]="selectedGroup || undefined"
+      (itemSelected)="onGroupSelected($event)"
+    ></app-select>
+  }
+
+  <router-outlet></router-outlet>
+</div>

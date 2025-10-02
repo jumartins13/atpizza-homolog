@@ -1,0 +1,50 @@
+@if(isVisible){
+<div class="modal">
+  <div class="modal-container">
+    <div class="modal-title"><strong>LANÇAMENTO DE RESULTADO</strong></div>
+
+    @if (match) {
+    <div class="matches">
+      <div class="matches__player">
+        <div class="player-name">
+          <div class="player-value">{{ getPlayerName(match.player1.id) }}</div>
+        </div>
+        <div class="score-selector">
+          <label>Placar</label>
+          <select [(ngModel)]="score1updated">
+            @for(option of scoreOptions; track option.value) {
+            <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="matches__player">
+        <div class="player-name">
+          <div class="player-value">{{ getPlayerName(match.player2.id) }}</div>
+        </div>
+        <div class="score-selector">
+          <label>Placar</label>
+          <select [(ngModel)]="score2updated">
+            @for(option of scoreOptions; track option.value) {
+            <option [ngValue]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+    }
+    
+    @if(!isValidScore(score1updated, score2updated)) {
+    <div class="score-error">Placar inválido!</div>
+    }
+
+    <div class="btn">
+      <button (click)="closeModal()" class="btn__cancel">Cancelar</button>
+      <button (click)="saveMatch()" class="btn__save" [disabled]="!isValidScore(score1updated, score2updated)">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
+}

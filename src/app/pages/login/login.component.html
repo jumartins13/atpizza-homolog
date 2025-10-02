@@ -1,0 +1,32 @@
+@if(isLoading) {
+<div class="loading-overlay">
+  <div class="loading-message">
+    {{ loadingMessage }}
+  </div>
+</div>
+} @else {
+<div class="logo large" alt="ATPizza"></div>
+<div class="login-container">
+  <div class="login-box">
+    <div class="title">
+      <div class="title__first">Seja bem vindo</div>
+      <div class="title__second">Efetue o seu login</div>
+    </div>
+
+    <button class="google-button" (click)="loginWithGoogle()">
+      <img
+        width="50"
+        src="./images/9100F472-54B6-461B-B77F-437E652D1DBD_1_102_o.jpeg"
+      />
+      <div>Entrar com Google</div>
+    </button>
+
+    
+  </div>
+</div>
+
+@if(showNotRegisteredMessage){
+<div class="login-warning">
+  ‼️ Atenção: Acesso apenas para jogadores cadastrados.
+</div>
+} }

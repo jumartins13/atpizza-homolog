@@ -1,0 +1,903 @@
+@import "../../../styles";
+@import "../../../styles/components/header";
+@import "../../../styles/components/loading";
+
+.logo {
+  position: fixed;
+  top: 1.6rem;
+  right: 2.5rem;
+  bottom: 3rem;
+  margin-left: 2.5rem;
+  background-image: url("../../../assets/images/logo.png");
+  z-index: 2000 !important; // Sempre acima do conteúdo
+}
+
+// Side menu mask deve ficar acima da logo apenas na vertical
+@media screen and (orientation: portrait) {
+  ::ng-deep .side-menu__mask {
+    z-index: 2500 !important; // Acima da logo (2000) mas abaixo do side menu quando aberto
+  }
+
+  // Garantir que o side menu fique acima do mask
+  ::ng-deep .side-menu {
+    z-index: 2600 !important; // Acima do mask para não ter blur
+  }
+}
+
+.tabs {
+  margin-top: 0;
+}
+
+.select {
+  margin-top: 4.375rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0.75rem 1.25rem;
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1875rem;
+    width: 15.625rem;
+    overflow: hidden;
+  }
+
+  &__name {
+    color: white;
+    font-size: 1.4rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(20, end);
+    width: 100%;
+
+    &__input {
+      background: black;
+      color: white;
+      font-size: 1.5rem;
+      border: none;
+      width: 85%;
+      margin: 1rem 0.3rem 0 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      animation: typing 1s steps(25, end);
+    }
+  }
+
+  &__avatar {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:empty {
+      background-color: #383a38;
+    }
+
+    &.disabled {
+      cursor: pointer; // Mudado de not-allowed para pointer quando tem foto
+
+      img {
+        opacity: 1 !important;
+      }
+
+      &:hover {
+        opacity: 0.9; // Leve hover mesmo quando disabled
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      opacity: 1;
+    }
+
+    ng-icon {
+      opacity: 0.7;
+      
+      &.disabled-icon {
+        color: #6b7280;
+        opacity: 0.6;
+      }
+    }
+
+    &:hover:not(.disabled) {
+      opacity: 0.9;
+
+      ng-icon {
+        opacity: 1;
+      }
+    }
+
+    .upload-spinner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+
+      &::after {
+        content: "";
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 3px solid #f3f3f3;
+        border-top-color: #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .edit-overlay {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 10;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.1);
+      }
+
+      ng-icon {
+        color: white;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.ranking-position {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #4ade80;
+  margin: 0.625rem 0.3rem 0 0;
+}
+
+.details {
+  color: white;
+  font-size: 1.2rem;
+  padding: 0 1.25rem;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0 1.25rem;
+  }
+
+  &__value {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.1875rem;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &__input {
+      width: 100%;
+      padding: 0 0.625rem;
+      font-size: 1rem;
+      color: white;
+      background: transparent;
+      border: none;
+      text-align: right;
+    }
+
+    &__edit {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.25rem;
+    }
+
+    &__height {
+      width: 28%;
+      font-size: 1rem;
+      color: white;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      text-align: center;
+
+      &.editing {
+        background: #f0f0f07c;
+      }
+
+      &__unit {
+        color: #666;
+      }
+    }
+  }
+}
+
+.insta-icon {
+  display: flex;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  animation: slideDown 0.2s ease-in-out;
+}
+
+// ===== ESTILOS DO CROPPER MODAL =====
+.cropper-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .cropper-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+  
+  .cropper-container {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: 500px;
+    animation: modalSlideIn 0.3s ease-out;
+    
+    @media (max-width: 768px) {
+      width: 95vw;
+      height: auto;
+      max-height: 95vh;
+    }
+  }
+  
+  .cropper-header {
+    padding: 5px 20px 5px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    background-color: $color-primary;
+    
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: white;
+    }
+  }
+  
+  .cropper-content {
+    position: relative;
+    padding: 20px;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-primary;
+    
+    @media (max-width: 768px) {
+      min-height: 300px;
+      padding: 16px;
+    }
+    
+    image-cropper {
+      max-width: 100%;
+      max-height: 350px;
+      
+      @media (max-width: 768px) {
+        max-height: 300px;
+      }
+    }
+  }
+  
+  .cropper-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+    
+    p {
+      color: #6b7280;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+  
+  .cropper-actions {
+    display: flex;
+    gap: 12px;
+    padding: 16px 10px 20px;
+    border-top: 1px solid #e5e7eb;
+    background-color: $color-primary;
+
+    
+    button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      &.btn-cancel {
+        background-color: transparent;
+        color: white;
+        border: 1px solid white;
+        
+        &:hover:not(:disabled) {
+          background-color: #e5e7eb;
+        }
+      }
+      
+      &.btn-confirm {
+        background-color: white;
+        
+        &:hover:not(:disabled) {
+          background-color: #2563eb;
+        }
+      }
+    }
+  }
+}
+
+// ===== ANIMAÇÕES =====
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// ===== PREVENÇÃO DE ZOOM NO MOBILE =====
+input, select, textarea {
+  font-size: 16px !important; // Previne zoom automático no iOS
+  touch-action: manipulation; // Melhora responsividade touch
+}
+
+.details__item__input,
+.details__item__height,
+.profile__name__input {
+  font-size: 16px !important; // Força 16px para prevenir zoom
+}
+
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  .details__item__input,
+  .details__item__height,
+  .profile__name__input {
+    font-size: 16px !important;
+  }
+}
+
+// ===== RESPONSIVIDADE MOBILE =====
+@media (max-width: 768px) {
+  .details {
+    &__item {
+      padding: 0.4rem 0.8rem;
+      
+      span:first-child {
+        font-size: 0.85rem;
+        margin-bottom: 0.2rem;
+      }
+    }
+    
+    &__value {
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 36px;
+      
+      // Inputs e selects menores e alinhados
+      .details__item__input {
+        max-width: 140px;
+        min-width: 80px;
+        text-align: right;
+        font-size: 16px !important; // Mantém 16px para prevenir zoom
+        padding: 0.3rem 0.5rem;
+        border-radius: 4px;
+      }
+      
+      // Input de altura específico
+      .details__item__height {
+        max-width: 80px;
+        min-width: 70px;
+        text-align: center;
+        font-size: 16px !important; // Mantém 16px para prevenir zoom
+        padding: 0.3rem 0.4rem;
+        border-radius: 4px;
+        
+        &__unit {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.7);
+        }
+      }
+      
+      // Selects específicos
+      select.details__item__input {
+        max-width: 140px;
+        padding: 0.3rem 0.4rem;
+        font-size: 16px !important; // Mantém 16px para prevenir zoom
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      
+      // Container de rede social
+      &.social-container {
+        .details__item__input {
+          max-width: 120px;
+          text-align: right;
+        }
+        
+        .insta-icon {
+          flex-shrink: 0;
+          margin-left: 0.3rem;
+        }
+      }
+      
+      // Bandeira do país
+      app-country-flag {
+        flex-shrink: 0;
+        margin-left: 0.3rem;
+      }
+    }
+  }
+  
+  // Ajuste do perfil no mobile
+  .profile {
+    gap: 1rem;
+    
+    &__field {
+      width: auto;
+      flex: 1;
+      
+      .profile__name__input {
+        font-size: 25px !important; // Mantém 25px para prevenir zoom
+        margin: 0.5rem 0.2rem 0 0;
+      }
+    }
+    
+    &__avatar {
+      width: 6rem;
+      height: 6rem;
+    }
+  }
+  
+  // Título dos detalhes
+  .details {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+    
+    &__list {
+      padding: 0 1rem;
+      gap: 0.4rem;
+    }
+  }
+}
+
+// ===== RESPONSIVIDADE LANDSCAPE MOBILE - IGUAL AO COMPORTAMENTO DE HORÁRIOS =====
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  // Logo oculta no landscape
+  .logo {
+    display: none !important;
+  }
+
+  // Comportamento com tabs fixas no landscape
+  .header {
+    position: relative;
+    background: inherit;
+    padding-top: 60px; // Espaço para as tabs fixas
+  }
+
+  // Tabs fixas no landscape
+  .tabs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000 !important;
+    background: black !important;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin-top: 0;
+  }
+
+  // Autocomplete embaixo das tabs fixas
+  app-autocomplete {
+    position: static;
+    background: inherit;
+    margin-top: 0.5rem; // Espaço após as tabs fixas
+
+    ::ng-deep {
+      .search-wrapper {
+        margin: 0.9rem 1.25rem 0.5rem 0; // Alinhamento à direita com espaço superior
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .container {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 100px !important; // Espaço extra no final
+    box-sizing: border-box;
+  }
+
+  // Layout horizontal para aproveitar o espaço
+  .profile {
+    margin: 1rem 1rem 0; // Top, horizontal, sem margin-bottom
+    gap: 1rem;
+
+    &__field {
+      width: auto;
+      flex: 1;
+    }
+
+    &__name__input {
+      font-size: 1.2rem;
+      margin: 0.5rem 0.2rem 0 0;
+    }
+
+    &__avatar {
+      width: 5rem;
+      height: 5rem;
+      flex-shrink: 0;
+    }
+  }
+
+  .details {
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin: 0.5rem 0;
+
+    &__list {
+      padding: 0 1rem;
+      gap: 0.2rem;
+    }
+
+    &__item {
+      padding: 0.3rem 0.8rem;
+      margin-bottom: 0.3rem;
+
+      span:first-child {
+        font-size: 0.9rem;
+        width: 45%;
+        flex-shrink: 0;
+      }
+
+      &__input {
+        max-width: 120px;
+        font-size: 14px !important;
+        padding: 0.2rem 0.4rem;
+      }
+
+      &__height {
+        max-width: 50px;
+        font-size: 14px !important;
+        padding: 0.2rem;
+
+        &__unit {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    &__value {
+      justify-content: flex-end;
+      gap: 0.3rem;
+      min-height: 32px;
+
+      // Container de rede social compacto
+      &.social-container {
+        .details__item__input {
+          max-width: 100px;
+        }
+
+        .insta-icon {
+          margin-left: 0.2rem;
+
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
+      // Bandeira do país menor
+      app-country-flag {
+        margin-left: 0.2rem;
+
+        ::ng-deep img {
+          width: 18px !important;
+          height: auto !important;
+        }
+      }
+    }
+  }
+
+  .ranking-position {
+    font-size: 0.9rem;
+    margin: 0.3rem 0.2rem 0 0;
+  }
+
+  .error-message {
+    font-size: 0.8rem;
+    margin-top: 0.1rem;
+  }
+
+  .container {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 100px !important;
+  }
+
+  .loading {
+    position: static;
+    z-index: auto;
+  }
+}
+
+// ===== CUSTOMIZAÇÕES PARA O NGX-IMAGE-CROPPER =====
+::ng-deep {
+  .cropper-modal {
+    image-cropper {
+      .cropper-wrapper {
+        position: relative !important;
+        display: flex !important;
+
+        .cropper {
+          max-width: 100% !important;
+          max-height: 350px !important;
+          display: flex !important;
+
+          @media (max-width: 768px) {
+            max-height: 300px !important;
+          }
+        }
+
+        .cropper-image {
+          border-radius: 8px;
+        }
+      }
+
+      // Sobrescrever o display padrão da lib
+      &:not(.cropper-hidden) {
+        display: flex !important;
+      }
+
+      &.cropper-hidden {
+        display: none !important;
+      }
+    }
+  }
+}
+
+// MODAL DE AMPLIAÇÃO DE FOTO
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modalFadeIn 0.3s ease-out;
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+  }
+
+  &__content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalSlideIn 0.3s ease-out;
+  }
+
+  &__close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+
+    // &:hover {
+    //   background: white;
+    //   transform: scale(1.1);
+    // }
+
+    ng-icon {
+      color: #333;
+    }
+  }
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsividade do modal
+@media (max-width: 768px) {
+  .photo-modal {
+    &__content {
+      max-width: 95vw;
+      max-height: 95vh;
+    }
+
+    &__close {
+      top: -40px;
+      right: -10px;
+      width: 35px;
+      height: 35px;
+    }
+
+    &__image {
+      border-radius: 8px;
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/icons/**",
+          "/images/**",
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "firestore-cache",
+      "urls": [
+        "https://firestore.googleapis.com/**",
+        "https://firebaseapp.com/**",
+        "https://*.firebaseapp.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 500,
+        "maxAge": "2d",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "auth-cache",
+      "urls": [
+        "https://identitytoolkit.googleapis.com/**",
+        "https://securetoken.googleapis.com/**",
+        "https://www.googleapis.com/identitytoolkit/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 200,
+        "maxAge": "6h",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "storage-cache",
+      "urls": [
+        "https://firebasestorage.googleapis.com/**",
+        "https://storage.googleapis.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxSize": 300,
+        "maxAge": "7d",
+        "timeout": "15s"
+      }
+    }
+  ]
+}

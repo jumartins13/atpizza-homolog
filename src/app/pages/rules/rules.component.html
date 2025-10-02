@@ -1,0 +1,141 @@
+<!-- tennis-rules.component.html -->
+<div class="header">
+  <div class="logo middle"></div>
+  <div class="tabs">
+    <div class="tabs__status">
+      <a class="tabs__status__title active"> Regulamento </a>
+    </div>
+  </div>
+</div>
+
+<app-floating-circle></app-floating-circle>
+
+<div class="container">
+  <div class="rules-list">
+    <div class="rules-item">
+      <button
+        class="accordion-button"
+        [class.select-arrow-active]="isExpanded('ranking')"
+        (click)="toggleSection('ranking')"
+      >
+        <span>Regras básicas</span>
+      </button>
+      @if(isExpanded('ranking')){
+      <div class="accordion-content">
+        <ul class="content-list">
+          <li class="content-item">
+            <span>As partidas consistirão em 01 (um) set com vantagem.</span>
+          </li>
+          <li class="content-item">
+            <span
+              >Em caso de empate 6x6, será jogado um tie break de 7
+              pontos.</span
+            >
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+
+    <div class="rules-item">
+      <button
+        class="accordion-button"
+        [class.select-arrow-active]="isExpanded('wo')"
+        (click)="toggleSection('wo')"
+      >
+        <span>Regras para o WO</span>
+      </button>
+      @if(isExpanded('wo')){
+      <div class="accordion-content">
+        <ul class="content-list">
+          <li class="content-item">
+            <span>Não aparece para o jogo no horário marcado.</span>
+          </li>
+          <li class="content-item">
+            <span>O adversário vence a partida por W.O. sem precisar jogar.</span>
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+
+    <div class="rules-item">
+      <button
+        class="accordion-button"
+        [class.select-arrow-active]="isExpanded('results')"
+        (click)="toggleSection('results')"
+      >
+        <span>Lançamento de resultados</span>
+      </button>
+      @if(isExpanded('results')){
+      <div class="accordion-content">
+        <ul class="content-list">
+          <li class="content-item">
+            <span>O resultado deve ser lançado logo após o término da partida.</span>
+          </li>
+          <li class="content-item">
+            <span>Apenas um jogador por partida deve preencher e submeter o resultado.</span>
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+
+    <div class="rules-item">
+      <button
+        class="accordion-button"
+        [class.select-arrow-active]="isExpanded('games')"
+        (click)="toggleSection('games')"
+      >
+        <span>Classificação nos confrontos</span>
+      </button>
+      @if(isExpanded('games')){
+      <div class="accordion-content">
+        <ul class="content-list">
+          <li class="content-item">
+            <span>1° critério: Maior número de vitórias.</span>
+          </li>
+          <li class="content-item">
+            <span>2° critério: Resultado do confronto direto.</span>
+          </li>
+          <li class="content-item">
+            <span>3° critério: Saldo de games.</span>
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+
+    <div class="rules-item">
+      <button
+        class="accordion-button"
+        [class.select-arrow-active]="isExpanded('points')"
+        (click)="toggleSection('points')"
+      >
+        <span>Sistema de pontuação</span>
+      </button>
+      @if(isExpanded('points')){
+      <div class="accordion-content">
+        <ul class="content-list">
+          <li class="content-item">
+            <span>Ao final de cada rodada, os jogadores recebem pontos conforme sua posição na classificação geral. Esses pontos somam-se ao longo das rodadas para formar o ranking acumulado da temporada.</span>
+          </li>
+          <li class="content-item">
+            <span>
+              <strong>Distribuição de Pontos por Posição na Rodada:</strong><br><br>
+              <strong>Grupo A (1º ao 5º):</strong> 1000, 900, 810, 730, 660<br><br>
+              <strong>Grupo B (6º ao 10º):</strong> 600, 550, 500, 450, 410<br><br>
+              <strong>Grupo C (11º ao 15º):</strong> 380, 350, 320, 290, 260<br><br>
+              <strong>Grupo D (16º ao 20º):</strong> 240, 220, 200, 180, 160<br><br>
+              <strong>Grupo E (21º ao 25º):</strong> 150, 140, 130, 120, 110<br><br>
+              <strong>Grupo F (26º ao 30º):</strong> 100, 90, 80, 70, 60<br><br>
+              <strong>Grupo G (31º ao 35º):</strong> 55, 50, 45, 40, 35<br><br>
+              <strong>Grupo H (36º ao 40º):</strong> 30, 25, 20, 15, 10<br>
+            </span>
+          </li>
+        </ul>
+      </div>
+      }
+    </div>
+  </div>
+</div>

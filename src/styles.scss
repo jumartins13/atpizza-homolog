@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+@import "styles/index.scss";
+
+.page {
+  height: 100%;
+}
+
+html,
+body {
+  overscroll-behavior-y: contain; /* bloqueia pull-to-refresh */
+  overscroll-behavior-x: none;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Esconde scroll horizontal */
+  overflow-y: auto;   /* Mantém scroll vertical normal */
+  background-color: black;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Mobile landscape: garantir scroll completo */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  html,
+  body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-snack-bar-container.custom-snackbar-success {
+  background-color: #4caf50 !important;
+  color: #fff !important;
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+}
+
+/* Posicionamento opcional */
+.mat-mdc-snack-bar-container.custom-top-right {
+  justify-content: flex-end !important;
+  align-items: flex-start !important;
+}

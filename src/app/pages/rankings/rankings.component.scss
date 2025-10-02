@@ -1,0 +1,233 @@
+@import "../../../styles";
+@import "../../../styles/components/header";
+@import "../../../styles/components/loading";
+
+.logo {
+  position: fixed;
+  bottom: 48px;
+  margin-left: 40px;
+  background-image: url("../../../assets/images/logo.png");
+  top: 25px;
+  right: 40px;
+}
+
+.round-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.toggle {
+  display: flex;
+  justify-content: center;
+  
+  // Customização do mat-slide-toggle para versão MDC
+  ::ng-deep mat-slide-toggle {
+    // Diminui o tamanho do switch
+    .mdc-switch {
+      .mdc-switch__track::after {
+        background-color: #00ff66 !important; // substitui a cor ligada (verde)
+      }
+    }
+    
+    // Track (trilha do toggle)
+    .mdc-switch__track {
+      width: 47px !important;
+      height: 24px !important;
+      border-radius: 12px !important;
+      background-color: #666 !important;
+      opacity: 0.5 !important;
+    }
+    
+    // Handle (bolinha)
+    .mdc-switch__handle {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    // Ajusta o label
+    .mdc-label {
+      font-size: 0.9rem !important;
+      color: white !important;
+    }
+  }
+}
+.generalBtn {
+  display: flex;
+  justify-content: center;
+
+  &__totalPoints {
+    background-color: transparent;
+    color: white;
+    border: grey 1px solid;
+    border-radius: 5px;
+    padding: 0.5rem 3rem;
+    font-weight: 500;
+
+    &.active {
+      border: 1px solid $color-secondary;
+    }
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.25rem;
+  justify-content: center;
+  position: relative;
+
+  &__title {
+    color: white;
+    display: flex;
+  }
+
+  &__player {
+    animation: appear 0.6s ease-out forwards;
+    background-image: linear-gradient(
+      to right,
+      rgba(130, 133, 130, 0) 0%,
+      rgba(130, 133, 130, 0.33) 20%,
+      rgba(130, 133, 130, 0.33) 70%,
+      rgba(130, 133, 130, 0) 110%
+    );
+    color: white;
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+    width: 100%;
+
+    &__gold {
+      background-image: linear-gradient(
+        to right,
+        rgba(231, 214, 117, 0) 0%,
+        rgba(231, 214, 117, 0.3) 20%,
+        rgba(231, 214, 117, 0.3) 70%,
+        rgba(231, 214, 117, 0) 110%
+      );
+    }
+
+    &__silver {
+      background-image: linear-gradient(
+        to right,
+        rgba(213, 213, 213, 0) 0%,
+        rgba(213, 213, 213, 0.33) 20%,
+        rgba(213, 213, 213, 0.33) 70%,
+        rgba(213, 213, 213, 0) 110%
+      );
+    }
+
+    &__bronze {
+      background-image: linear-gradient(
+        to right,
+        rgba(241, 135, 86, 0) 0%,
+        rgba(241, 135, 86, 0.33) 20%,
+        rgba(241, 135, 86, 0.33) 70%,
+        rgba(241, 135, 86, 0) 110%
+      );
+    }
+  }
+
+  &__icon {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.75rem;
+  }
+
+  &__position {
+    flex-shrink: 0; // Impede que a posição encolha
+    width: 35px; // Define largura fixa menor
+    text-align: left;
+    font-size: 0.9rem;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+
+  // Container para arrow (quando presente)
+  &__arrow-container {
+    width: 20px; // Espaço reservado para a arrow
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__name {
+    flex: 1; // Ocupa o espaço restante disponível
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 8px;
+  }
+
+  &__item {
+    text-align: right;
+    font-size: 0.9rem;
+    width: 96%;
+
+    &__value {
+      flex-shrink: 0; // Impede que os pontos encolham
+      width: 70px; // Define largura fixa para os pontos
+      text-align: right;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: 0.75rem;
+    }
+  }
+}
+
+.hide-star {
+  color: transparent;
+}
+
+
+
+::ng-deep app-select {
+  .select-wrapper {
+    justify-content: center !important;
+    margin: 0.5rem -0.25rem !important;
+  }
+
+  .custom-select {
+    width: 85% !important;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-state-message {
+  text-align: center;
+  margin-top: 5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #888;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

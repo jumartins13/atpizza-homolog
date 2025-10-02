@@ -1,0 +1,30 @@
+<div class="popup-overlay" (click)="closePopup()" [class.show]="isVisible">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h3>Grupos do WhatsApp</h3>
+      <button class="close-btn" (click)="closePopup()">✕</button>
+    </div>
+    
+    <div class="groups-list">
+      @for (group of getGroupsWithLinks(); track group.value) {
+        <a 
+          class="group-item" 
+          [href]="group.link" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          (click)="closePopup()"
+        >
+          <img src="./images/whatsapp.PNG" alt="WhatsApp" width="20" height="20">
+          <span>{{ group.name }}</span>
+          <span class="arrow">→</span>
+        </a>
+      }
+      
+      @if (getGroupsWithLinks().length === 0) {
+        <div class="no-groups">
+          <p>Nenhum grupo do WhatsApp disponível no momento.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

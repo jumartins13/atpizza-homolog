@@ -1,0 +1,63 @@
+.select-skeleton {
+  position: relative;
+  min-width: 8.75rem; // 140px - mesmo do select real
+  margin: 0.625rem 0.75rem; // 10px 12px - mesmo do select real
+}
+
+.skeleton-select {
+  position: relative;
+  width: 100%;
+  height: 3rem; // Altura fixa igual ao select real
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem; // 8px - mesmo do select real
+  animation: loading 2s infinite ease-in-out;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Variante específica para a tela de rankings
+.select-skeleton.rankings-variant {
+  justify-content: center !important;
+  margin: 0.5rem -0.25rem !important;
+  
+  .skeleton-select {
+    width: 85% !important; // Mesmo do select real no rankings
+  }
+}
+
+// Responsividade para mobile (mesmo do select real)
+@media (max-width: 768px) {
+  .select-skeleton {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0.625rem;
+  }
+
+  .skeleton-select {
+    width: 40%; // Mesmo do select real
+  }
+
+  // Para rankings no mobile, mantém o estilo desktop
+  .select-skeleton.rankings-variant {
+    justify-content: center !important;
+    margin: 0.5rem -0.25rem !important;
+    
+    .skeleton-select {
+      width: 85% !important;
+    }
+  }
+}

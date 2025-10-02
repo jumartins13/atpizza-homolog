@@ -1,0 +1,73 @@
+<div class="modal-overlay" (click)="cancelCrop()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <div class="header-content">
+        <h3 class="hero-title">Ajustar Foto do Perfil</h3>
+        <p class="hero-subtitle">
+          Posicione e redimensione sua imagem<br>
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="cropper-card">
+        <div class="cropper-content">
+          <div class="cropper-wrapper">
+            <image-cropper
+              [imageChangedEvent]="imageChangedEvent"
+              [maintainAspectRatio]="true"
+              [aspectRatio]="1"
+              [resizeToWidth]="300"
+              [cropperMinWidth]="128"
+              [roundCropper]="true"
+              [canvasRotation]="0"
+              [transform]="{}"
+              [alignImage]="'center'"
+              [class.cropper-hidden]="!isCropperReady"
+              format="jpeg"
+              [imageQuality]="92"
+              [autoCrop]="true"
+              (imageCropped)="imageCropped($event)"
+              (imageLoaded)="imageLoaded()"
+              (cropperReady)="cropperReady()"
+              (loadImageFailed)="loadImageFailed()">
+            </image-cropper>
+
+            @if(!isCropperReady) {
+              <div class="loading"></div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+
+      <div class="cropper-actions">
+        <div class="action-item">
+          <button 
+            type="button" 
+            class="btn" 
+            (click)="cancelCrop()">
+            <ng-icon name="matCloseSharp" size="18"></ng-icon>
+            <span>Cancelar</span>
+          </button>
+        </div>
+        
+        <div class="action-item">
+          <button 
+            type="button" 
+            class="btn btn-confirm"
+            [disabled]="!isCropperReady || !croppedImage"
+            (click)="confirmCrop()">
+            <ng-icon name="matCheckSharp" size="18"></ng-icon>
+            <span>Confirmar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

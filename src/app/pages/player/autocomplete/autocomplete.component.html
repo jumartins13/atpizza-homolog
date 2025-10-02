@@ -1,0 +1,43 @@
+<div class="search-wrapper">
+  <div class="search-container">
+    <input
+      #searchInput
+      class="search-input"
+      type="text"
+      [value]="searchText"
+      (input)="onSearch($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (keydown)="onKeyDown($event)"
+      placeholder="Buscar jogadores..."
+      autocomplete="off"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+    />
+
+    <div class="players-container">
+      <ul class="players-list" [class.players-hide]="!showList">
+        @if(filteredPlayers.length > 0) { 
+          @for(player of filteredPlayers; track player.id; let i = $index) {
+            <li
+              [class.selected]="i === selectedIndex"
+              (click)="selectPlayer(player)"
+              [innerHTML]="highlightText(player.name)"
+            ></li>
+          } 
+        } @else if (searchText.length > 0) {
+          <li class="empty-state">
+            Nenhum jogador encontrado para "{{ searchText }}"
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="search-icon" (click)="focusSearch()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+  </div>
+</div>

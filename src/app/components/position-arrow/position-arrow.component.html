@@ -1,0 +1,12 @@
+@if (positionChange > 0) {
+    <span class="arrow up">
+      <ng-icon name="matKeyboardDoubleArrowUpSharp"></ng-icon>
+      {{ positionChange }}
+    </span>
+  } @else if (positionChange < 0) {
+    <span class="arrow down">
+      <ng-icon name="matKeyboardDoubleArrowDownSharp"></ng-icon>
+      {{ -positionChange }}
+    </span>
+  }
+  

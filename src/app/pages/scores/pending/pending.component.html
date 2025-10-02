@@ -1,0 +1,50 @@
+<div class="container">
+  <!-- ul.list>li.list-item*5>a -->
+
+  @if(loading) {
+  <div class="loading">
+    <div class="loading-content">
+      <div class="loading-spinner">
+        <div class="spinner-circle spinner-1"></div>
+        <div class="spinner-circle spinner-2"></div>
+        <div class="spinner-circle spinner-3"></div>
+      </div>
+      <div class="loading-text">Carregando confrontos...</div>
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+  } @if (!loading && matches.length === 0) {
+  <p>{{ message }}</p>
+  } @if(!loading && matches.length) {
+  <div class="table">
+    @for (match of matches; track $index) {
+    <div class="table__group">
+      <span class="table__group__players__first">{{
+        getPlayerName(match.player1.id)
+      }}</span>
+      <span class="table__group__score"> {{ match.player1.score }} </span>
+      <span class="table__group__vs"> X </span>
+      <span class="table__group__score"> {{ match.player2.score }} </span>
+      <span class="table__group__players__second">{{
+        getPlayerName(match.player2.id)
+      }}</span>
+      @if(canEditMatch(match)) {
+      <ng-icon (click)="openModal(match)" name="matEditSharp"></ng-icon>
+      }
+    </div>
+    }
+  </div>
+  } @if(isOpenModal) {
+  <app-confirmation-modal
+    [isVisible]="isOpenModal"
+    [match]="selectedMatch"
+    (closeModalEvent)="handleCloseModal()"
+    (saveMatchEvent)="handleSaveMatch($event)"
+  >
+  </app-confirmation-modal>
+  }
+</div>

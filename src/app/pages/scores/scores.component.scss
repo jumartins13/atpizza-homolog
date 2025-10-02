@@ -1,0 +1,30 @@
+@import '../../../styles';
+@import '../../../styles/components/header';
+
+.logo {
+  position: fixed;
+  margin-left: 40px; // 40px
+  background-image: url("../../../assets/images/logo.png");
+  top: 25px;
+  right: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 60; // Garante que fique acima de outros elementos
+}
+
+// Side menu mask deve ficar acima da logo apenas na vertical
+@media screen and (orientation: portrait) {
+  ::ng-deep .side-menu__mask {
+    z-index: 90 !important; // Acima da logo (60) mas abaixo do side menu (100)
+  }
+}
+
+// Mobile landscape: ajustar APENAS logo no landscape
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .logo {
+    width: 40px;
+    height: 40px;
+    top: 15px;
+    right: 20px;
+  }
+}

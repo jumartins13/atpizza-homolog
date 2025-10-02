@@ -1,0 +1,882 @@
+@import "../../../styles";
+@import "../../../styles/components/header";
+@import "../../../styles/components/table";
+@import "../../../styles/components/logo";
+@import "../../../styles/components/loading";
+
+/* ===================== Variáveis ===================== */
+$primary-cyan: #06b6d4;
+$primary-red: #ef4444;
+
+/* Neon */
+$primary-green: #39ff14;       // verde neon
+$primary-yellow-neon: #fff700; // amarelo neon
+$primary-blue: #1a8cff;        // azul neon
+
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+
+$text-primary: rgba(255, 255, 255, 0.9);
+$text-secondary: rgba(255, 255, 255, 0.6);
+$text-tertiary: rgba(255, 255, 255, 0.5);
+
+/* ===================== Mixins ===================== */
+@mixin glass-card {
+  backdrop-filter: blur(12px);
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+/* ===================== Base ===================== */
+.logo {
+  position: fixed;
+  bottom: 48px;
+  margin-left: 40px;
+  background-image: url("../../../assets/images/logo.png");
+  top: 25px;
+  right: 40px;
+}
+
+.container {
+  padding: 0 0.5rem;
+  padding-bottom: 0;
+  transition: padding-bottom 0.3s ease;
+  overflow: hidden;
+
+  &.with-selection-bar {
+    padding-bottom: 120px;
+
+    @media (max-width: 768px) {
+      padding-bottom: 140px;
+    }
+  }
+}
+
+.tabs { margin-top: 0; }
+
+/* ===================== Header Card ===================== */
+.header-card {
+  @include glass-card;
+  padding: 1rem;
+
+  .header-content {
+    .title {
+      background: linear-gradient(90deg, #5fbbbb, #1e7f4b);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      font: inherit;
+
+      .title-icon {
+        padding: 0.5rem;
+        background: rgba($primary-green, 0.2);
+        border-radius: 0.5rem;
+        border: 1px solid rgba($primary-green, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $primary-green;
+      }
+    }
+  }
+
+  .header-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .week-navigation {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .nav-button {
+        padding: 0.5rem;
+        background: transparent;
+        border: none;
+        color: $text-secondary;
+        cursor: pointer;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        font-size: 1.2rem;
+
+        &:hover {
+          background: $glass-bg;
+          color: $text-primary;
+        }
+      }
+
+      .week-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+      }
+    }
+    
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      
+      .summary-link {
+        padding: 0.5rem 1rem;
+        background: rgba($primary-green, 0.2);
+        border: 1px solid rgba($primary-green, 0.3);
+        border-radius: 0.5rem;
+        color: $primary-green;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: rgba($primary-green, 0.3);
+          border-color: rgba($primary-green, 0.5);
+          transform: translateY(-1px);
+        }
+        
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    .resume-button {
+      align-items: center;
+      padding: 0.4rem;
+      background: linear-gradient(90deg, #2d4747, #15281e);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      svg { width: 1rem; height: 1rem; }
+    }
+
+    .instructions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: $text-secondary;
+
+      svg { width: 1rem; height: 1rem; }
+      .desktop-text { @media (max-width: 640px) { display: none; } }
+      .mobile-text { display: none; @media (max-width: 640px) { display: inline; } }
+    }
+  }
+}
+
+/* ===================== Calendário — Scroll padrão (modo edição) ===================== */
+.calendar-scroll-wrapper {
+  position: relative;
+  border-radius: 0.75rem;
+  background: $glass-bg;
+  backdrop-filter: blur(12px);
+  border: 1px solid $glass-border;
+
+  overflow: auto;
+  max-height: 50vh;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+
+  /* rolagem nativa por padrão */
+  touch-action: pan-x pan-y;
+
+  /* ao arrastar para selecionar */
+  &.select-mode .cell-surface { touch-action: none; }
+}
+
+.calendar-container {
+  min-width: 100%;
+}
+
+/* ===================== Tabela (base) ===================== */
+.calendar-container .calendar-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  min-width: 600px;
+  background: transparent;
+  position: relative;
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(18, 24, 20, 0.98);
+
+    tr { background: transparent; }
+
+    th {
+      padding: 1rem 0.5rem;
+      font-weight: 600;
+      color: $text-primary;
+      text-align: center;
+      border-bottom: 2px solid $glass-border;
+      border-right: 1px solid $glass-border;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      pointer-events: none;
+      touch-action: pan-x;
+    }
+
+    .time-header {
+      position: sticky;
+      left: 0 !important;
+      z-index: 30;
+      text-align: center;
+      font-size: 0.9rem;
+      width: 120px;
+      min-width: 120px;
+      background: rgba(18, 24, 20, 0.98);
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0; right: 0; bottom: 0;
+        width: 1px; background: $glass-border;
+        box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .day-header {
+      font-size: 0.85rem;
+      min-width: 100px;
+      &:last-child { border-right: none; }
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      
+      &:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      
+      &:hover { 
+        background: rgba(255, 255, 255, 0.08) !important; 
+      }
+      
+      &:last-child td { border-bottom: none; }
+    }
+
+    .time-label {
+      position: sticky;
+      left: 0;
+      z-index: 15;
+
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      color: $text-primary;
+      text-align: left;
+      font-size: 0.85rem;
+      width: 120px;
+      min-width: 120px;
+      background: rgba(18, 24, 20, 0.95);
+      backdrop-filter: blur(8px);
+      border-right: 2px solid $glass-border;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+      touch-action: pan-y;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0; right: 0; bottom: 0;
+        width: 1px; background: transparent;
+        box-shadow: 1px 0 3px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .cell-td {
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0;
+      &:last-child { border-right: none; }
+    }
+
+    .cell-surface {
+      height: 4rem;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: auto;
+      transition: all 0.2s ease;
+      background-clip: padding-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 4rem;
+      pointer-events: auto;
+    }
+
+    /* Estados base (edição) */
+    .cell-td.status-available,
+    .cell-surface.status-available {
+      background: rgba($primary-green, 0.2);
+      .status-indicator { color: rgba($primary-green, 0.9); }
+    }
+
+    .cell-td.status-maybe,
+    .cell-surface.status-maybe {
+      background: rgba($primary-yellow-neon, 0.2);
+      .status-indicator { color: rgba($primary-yellow-neon, 0.9); }
+    }
+
+    .cell-td.status-busy,
+    .cell-surface.status-busy {
+      background: rgba($primary-red, 0.2);
+      border-color: rgba($primary-red, 0.3);
+      .status-indicator { color: rgba($primary-red, 0.9); }
+    }
+
+    .cell-td.status-free,
+    .cell-surface.status-free {
+      background: transparent;
+      &:hover { background: rgba(255, 255, 255, 0.05); }
+      &:active { background: rgba(255, 255, 255, 0.1); }
+    }
+
+    // Horários passados - não editáveis
+    .cell-td.past-time,
+    .cell-surface.past-time {
+      background: rgba(128, 128, 128, 0.1) !important;
+      opacity: 0.4;
+      cursor: not-allowed !important;
+      pointer-events: none;
+
+      .status-indicator {
+        opacity: 0.5;
+        color: rgba(255, 255, 255, 0.3) !important;
+      }
+
+      &:hover,
+      &:active {
+        background: rgba(128, 128, 128, 0.1) !important;
+      }
+    }
+
+    // Dias anteriores - cabeçalhos apagados
+    th.day-header.past-day {
+      opacity: 0.3 !important;
+      color: rgba(255, 255, 255, 0.3) !important;
+      background: rgba(128, 128, 128, 0.1) !important;
+    }
+
+    // Colunas de dias anteriores - todas as células apagadas
+    .cell-td.past-day-column,
+    .cell-surface.past-day-column {
+      opacity: 0.3 !important;
+      background: rgba(128, 128, 128, 0.05) !important;
+
+      .status-indicator {
+        opacity: 0.4 !important;
+        color: rgba(255, 255, 255, 0.2) !important;
+      }
+
+      &:hover,
+      &:active {
+        background: rgba(128, 128, 128, 0.05) !important;
+      }
+    }
+
+    .cell-td.pending-selection,
+    .cell-surface.pending-selection {
+      background: rgba($primary-blue, 0.25) !important;
+      border-color: rgba($primary-blue, 0.4) !important;
+      box-shadow: inset 0 0 0 1px rgba($primary-blue, 0.3);
+
+      .pending-indicator {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex; align-items: center; justify-content: center;
+        width: 1.5rem; height: 1.5rem;
+        background: rgba($primary-blue, 0.3);
+        border-radius: 50%;
+        color: white; font-size: 0.75rem; font-weight: 600;
+
+        svg { width: 0.875rem; height: 0.875rem; }
+      }
+    }
+
+    .status-indicator,
+    .selection-indicator {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; gap: 0.25rem;
+      font-size: 0.75rem; font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+
+      svg { width: 0.75rem; height: 0.75rem; }
+      .status-text { white-space: nowrap; }
+    }
+
+    .selection-indicator {
+      background: rgba($primary-yellow-neon, 0.3);
+      color: rgba($primary-yellow-neon, 0.9);
+      font-size: 0.75rem;
+    }
+  }
+}
+
+/* ===================== Legend (opcional) ===================== */
+.legend-card {
+  @include glass-card;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .legend-title {
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    svg { width: 1rem; height: 1rem; }
+  }
+
+  .legend-items {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+
+    .legend-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.875rem; color: $text-secondary;
+
+      .legend-color {
+        width: 1rem; height: 1rem; border-radius: 0.25rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        &.status-available { background: rgba($primary-green, 0.2); border-color: rgba($primary-green, 0.3); }
+        &.status-maybe     { background: rgba($primary-yellow-neon, 0.2); border-color: rgba($primary-yellow-neon, 0.3); }
+        &.selecting        { background: rgba($primary-yellow-neon, 0.2); border-color: rgba($primary-yellow-neon, 0.4); }
+        &.selected         { background: rgba($primary-blue, 0.2); border-color: rgba($primary-blue, 0.4); }
+        &.status-free      { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2); }
+      }
+    }
+  }
+}
+
+/* ===================== Responsivo (base) ===================== */
+@media (max-width: 768px) {
+  .header-card {
+    padding: 0.2rem;
+
+    .header-controls {
+      flex-direction: column; align-items: stretch;
+      .week-navigation { justify-content: center; }
+      .instructions { justify-content: center; }
+    }
+  }
+
+  .calendar-container .calendar-table {
+    min-width: 500px;
+
+    thead {
+      th { padding: 0.75rem 0.25rem; font-size: 0.8rem; }
+      .time-header { width: 100px; min-width: 100px; font-size: 0.8rem; }
+      .day-header { min-width: 80px; font-size: 0.75rem; }
+    }
+
+    tbody {
+      .time-label { width: 100px; min-width: 100px; padding: 0.5rem 0.75rem; font-size: 0.8rem; }
+      .cell-surface { height: 3.5rem; min-height: 3.5rem; }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar-container .calendar-table {
+    min-width: 450px;
+
+    thead {
+      .time-header { width: 50px; min-width: 50px; }
+      .day-header { min-width: 70px; }
+    }
+
+    tbody {
+      .time-label { width: 80px; min-width: 80px; padding: 0.5rem; }
+      .cell-surface { height: 3rem; min-height: 3rem; }
+      .status-indicator, .selection-indicator {
+        font-size: 0.65rem; padding: 0.2rem 0.4rem;
+        svg { width: 0.65rem; height: 0.65rem; }
+      }
+    }
+  }
+
+  /* performance: desativa blur em mobile */
+  .calendar-scroll-wrapper,
+  .calendar-table thead th,
+  .calendar-table tbody .time-label {
+    backdrop-filter: none;
+  }
+}
+
+/* ===================== Compact Readonly (viewer) - AJUSTES MÍNIMOS ===================== */
+
+/* Parâmetros otimizados do viewer */
+$viewer-time-col-w: 58px;     /* aumentado de 52px para melhor legibilidade */
+$viewer-row-h: 1.5rem;        /* reduzido de 1.75rem para mais compacto */
+$viewer-font: 0.65rem;        /* aumentado de 0.60rem para melhor leitura */
+$viewer-header-pad-y: 0.25rem;/* reduzido de 0.28rem */
+$viewer-header-pad-x: 0.25rem;/* aumentado de 0.20rem */
+
+/* Condensa o header quando o container contém o viewer */
+.container:has(> .calendar-scroll-wrapper.compact-readonly) {
+  .header-card { 
+    padding: 0.75rem; /* aumentado de 0.6rem */
+    // margin-bottom: 0.5rem; /* adiciona margem inferior */
+  }
+  .header-card .title { font-size: 1rem; } /* aumentado de 0.95rem */
+  .week-navigation .nav-button { 
+    font-size: 1.1rem; /* aumentado de 1rem */
+    padding: 0.4rem; /* aumentado de 0.3rem */
+  }
+  .week-navigation .week-title { font-size: 0.85rem; } /* aumentado de 0.8rem */
+}
+
+/* Wrapper otimizado no viewer - IDÊNTICO AO POPUP */
+.calendar-scroll-wrapper.compact-readonly {
+  margin-bottom: 0.2rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  max-height: 59vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tabela otimizada no viewer - IDÊNTICA AO POPUP */
+.calendar-table.compact.readonly {
+  width: 100%;
+  border-collapse: separate;
+  table-layout: fixed;
+  background: rgba(255, 255, 255, 0.1);
+  min-width: 320px;
+
+  thead {
+    th {
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 0.25rem 0.15rem;
+      text-align: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+      line-height: 1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      
+      &.time-header {
+        width: 45px;
+        min-width: 45px;
+        background: rgba(21, 54, 12, 0.95);
+        border: none;
+      }
+      
+      &.day-header {
+        white-space: pre-line;
+        background: rgba(21, 54, 12, 0.95);
+      }
+    }
+  }
+
+  tbody {
+    .time-row {
+      &:nth-child(even) {
+        .time-label {
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .cell-surface.readonly {
+          background: rgba(255, 255, 255, 0.02);
+          
+          &.status-available {
+            background: rgba($primary-green, 0.4);
+          }
+          
+          &.status-maybe {
+            background: rgba($primary-yellow-neon, 0.4);
+          }
+          
+          &.status-busy {
+            background: rgba(#ef4444, 0.4);
+          }
+        }
+      }
+      
+      &:nth-child(odd) {
+        .time-label {
+          background: rgba(255, 255, 255, 0.05);
+        }
+        .cell-surface.readonly {
+          background: rgb(130 122 122 / 10%);
+          
+          &.status-available {
+            background: rgba($primary-green, 0.4);
+          }
+          
+          &.status-maybe {
+            background: rgba($primary-yellow-neon, 0.4);
+          }
+          
+          &.status-busy {
+            background: rgba(#ef4444, 0.4);
+          }
+        }
+      }
+    }
+    
+    .time-label {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0.2rem;
+      text-align: center;
+      font-size: 0.55rem;
+      font-weight: 500;
+      line-height: 1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cell-td {
+      padding: 0;
+      width: calc((100% - 45px) / 7);
+      min-width: 35px;
+    }
+
+    .cell-surface.readonly {
+      height: 1.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* esconde badges do modo edição */
+    .pending-indicator,
+    .selection-indicator,
+    .status-indicator { display: none !important; }
+
+    /* Dias anteriores - styling específico para readonly */
+    .day-header.past-day {
+      opacity: 0.3 !important;
+      color: rgba(255, 255, 255, 0.3) !important;
+      background: rgba(128, 128, 128, 0.1) !important;
+    }
+
+    .cell-td.past-day-column .cell-surface.readonly,
+    .cell-surface.readonly.past-day-column {
+      opacity: 0.3 !important;
+      background: rgba(128, 128, 128, 0.05) !important;
+    }
+  }
+
+  /* sticky otimizado */
+  thead { position: sticky; top: 0; z-index: 20; }
+  thead .time-header { position: sticky; left: 0; z-index: 30; }
+  tbody .time-label  { position: sticky; left: 0; z-index: 15; }
+}
+
+/* Ajustes para telas estreitas */
+@media (max-width: 560px) {
+  $viewer-time-col-w-sm: 52px; /* aumentado de 48px */
+  $viewer-row-h-sm: 1.3rem;     /* reduzido de 1.5rem para mobile */
+  $viewer-font-sm: 0.62rem;    /* aumentado de 0.56rem */
+
+  .container:has(> .calendar-scroll-wrapper.compact-readonly) {
+    .header-card { 
+      padding: 0.1rem; 
+      // margin-bottom: 0.4rem;
+    }
+    .header-card .title { font-size: 0.95rem; }
+    .week-navigation .nav-button { 
+      font-size: 1rem; 
+      padding: 0.3rem; 
+    }
+    .week-navigation .week-title { font-size: 0.78rem; } /* melhorado */
+  }
+
+  .calendar-table.compact.readonly {
+    thead {
+      th {
+        padding: 0.2rem 0.22rem !important; /* melhorado */
+        font-size: $viewer-font-sm !important;
+        line-height: 1.1 !important;
+      }
+      .time-header {
+        width: $viewer-time-col-w-sm !important;
+        min-width: $viewer-time-col-w-sm !important;
+        font-size: $viewer-font-sm !important;
+      }
+      .day-header {
+        font-size: $viewer-font-sm !important;
+        padding: 0.2rem 0.2rem !important;
+      }
+    }
+
+    tbody {
+      .time-label {
+        width: $viewer-time-col-w-sm !important;
+        min-width: $viewer-time-col-w-sm !important;
+        font-size: $viewer-font-sm !important;
+        padding: 0.25rem 0.3rem !important; /* melhorado */
+      }
+      .cell-surface.readonly {
+        min-height: $viewer-row-h-sm !important;
+        height: $viewer-row-h-sm !important;
+      }
+    }
+  }
+}
+
+/* Legenda para visualização de outros jogadores - IDÊNTICA AO POPUP */
+.viewer-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.25rem;
+  margin: 0.5rem 1rem 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: block;
+      
+      &.dot-available {
+        background: $primary-green;
+        box-shadow: 0 0 4px rgba($primary-green, 0.6);
+      }
+      
+      &.dot-maybe {
+        background: $primary-yellow-neon;
+        box-shadow: 0 0 4px rgba($primary-yellow-neon, 0.6);
+      }
+    }
+    
+    span {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.6rem;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Melhoria adicional: esconde a legenda no viewer se existir */
+.compact-readonly ~ .legend-card { 
+  display: none; 
+}
+
+/* Responsivo mobile - EXATAMENTE IGUAL AO POPUP */
+@media (max-width: 768px) {
+  .calendar-table.compact.readonly {
+    thead th {
+      padding: 0.15rem 0.1rem;
+      font-size: 0.55rem;
+      
+      &.time-header {
+        width: 35px;
+        min-width: 35px;
+      }
+    }
+    
+    .time-label {
+      font-size: 0.5rem;
+      padding: 0.1rem;
+    }
+    
+    .cell-td {
+      width: calc((100% - 35px) / 7);
+      min-width: 30px;
+    }
+    
+    .cell-surface.readonly {
+      height: 1.2rem;
+    }
+  }
+
+  .viewer-legend {
+    gap: 0.75rem;
+    padding: 0.375rem;
+    margin: 0.375rem 1rem 0;
+    
+    .legend-item {
+      gap: 0.25rem;
+      
+      .dot {
+        width: 6px;
+        height: 6px;
+      }
+      
+      span {
+        font-size: 0.6rem;
+      }
+    }
+  }
+}
+
+/* Otimização extra para telas muito pequenas */
+@media (max-width: 480px) and (max-height: 800px) {
+  .calendar-table.compact.readonly {
+    min-width: 278px;
+    
+    thead th {
+      font-size: 0.5rem;
+      padding: 0.1rem 0.05rem;
+    }
+    
+    tbody {
+      .time-label {
+        font-size: 0.45rem;
+      }
+      
+      .cell-surface.readonly {
+        height: 1rem;
+      }
+    }
+  }
+  
+  .viewer-legend {
+    gap: 0.75rem;
+    padding: 0.2rem;
+    
+    .legend-item {
+      gap: 0.25rem;
+      
+      .dot {
+        width: 6px;
+        height: 6px;
+      }
+      
+      span {
+        font-size: 0.6rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,101 @@
+<div class="header">
+  <div class="logo middle"></div>
+
+  <div class="tabs">
+    <div class="tabs__status">
+      <a class="tabs__status__title active">Leaderboard</a>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="whatsapp-btn" (click)="openWhatsappPopup()">
+      <img src="./images/whatsapp.PNG" alt="WhatsApp" width="16" height="16">
+      Grupos
+    </button>
+  </div>
+</div>
+
+<div class="container" [class.loading-blur]="isLoading">
+  @if (isLoading) {
+    <div class="loading">
+      <div class="loading-content">
+        <div class="loading-spinner">
+          <div class="spinner-circle spinner-1"></div>
+          <div class="spinner-circle spinner-2"></div>
+          <div class="spinner-circle spinner-3"></div>
+        </div>
+        <div class="loading-text">Carregando classificação...</div>
+        <div class="loading-dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && groups.length === 0) {
+    <div class="empty-state-message">
+      ⚠️ Nenhum grupo disponível no momento.
+    </div>
+  }
+
+  @if (!isLoading && groups.length > 0) {
+    <!-- Global table header -->
+    <div class="global-table-header">
+      <div class="table__title">
+        <div class="table__position">Pos</div>
+        <div class="table__name">Nome</div>
+        <div class="table__item">J</div>
+        <div class="table__item">V</div>
+        <div class="table__item">GF</div>
+        <div class="table__item">GC</div>
+        <div class="table__item">Saldo</div>
+      </div>
+    </div>
+    
+    <div class="groups-grid">
+      @for (group of groups; track group.value) {
+        <div class="group-block">
+          <div class="group-header">
+            <h3>{{ group.name }}</h3>
+            <!-- <div class="group-stats">
+              <span class="pending-matches">
+                {{ getGroupPendingMatches(group.value) }} jogos pendentes
+              </span>
+            </div> -->
+          </div>
+
+          @if (hasGroupData(group.value)) {
+            <div class="table">
+              @for (player of getGroupData(group.value); track player.playerId; let i = $index) {
+                <div [ngClass]="['table__player', getPlayerClass(i, group.value)]">
+                  <div class="table__position">{{ player.position }}º</div>
+                  <div class="table__name">{{ player.name }}</div>
+                  <div class="table__item">{{ player.gamesDone }}</div>
+                  <div class="table__item">{{ player.victories }}</div>
+                  <div class="table__item">{{ player.pointsInFavor }}</div>
+                  <div class="table__item">{{ player.pointsAgainst }}</div>
+                  <div class="table__item">{{ player.scoreBalance }}</div>
+                </div>
+              }
+            </div>
+          } @else {
+            @if (!isLoading) {
+              <div class="group-empty">
+                <p>Nenhum dado disponível ainda para este grupo.</p>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- WhatsApp Groups Popup -->
+<app-whatsapp-groups-popup
+  [isVisible]="showWhatsappPopup"
+  [groups]="groups"
+  (close)="closeWhatsappPopup()">
+</app-whatsapp-groups-popup>

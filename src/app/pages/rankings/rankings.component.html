@@ -1,0 +1,126 @@
+<div class="header">
+  <div class="logo middle"></div>
+  <div class="tabs">
+    <div class="tabs__status">
+      <a class="tabs__status__title active"> Rankings </a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="table">
+    
+    <!-- Seletores sempre visíveis quando há anos disponíveis -->
+    @if (yearSelectItems.length > 0 || yearsLoading) {
+      <div class="round-selector">
+        <!-- Select de Ano -->
+        @if (yearsLoading) {
+          <app-select-skeleton variant="rankings"></app-select-skeleton>
+        } @else {
+          <app-select
+            [items]="yearSelectItems"
+            [selectedItem]="selectedYear ? { name: selectedYear.toString(), value: selectedYear.toString() } : undefined"
+            (itemSelected)="onYearSelected($event)"
+          ></app-select>
+        }
+
+        <!-- Select de Rodada -->
+        @if (selectedYear || (yearsLoading && roundsLoading)) {
+          @if (roundsLoading) {
+            <app-select-skeleton variant="rankings"></app-select-skeleton>
+          } @else if (selectedYear && filteredRoundSelectItems.length > 0) {
+            <app-select
+              [items]="filteredRoundSelectItems"
+              [selectedItem]="selectedRoundItem"
+              (itemSelected)="onRoundSelected($event)"
+            ></app-select>
+          }
+        }
+      </div>
+
+      <!-- Toggle sempre visível quando há dados -->
+      <div class="toggle">
+        <mat-slide-toggle
+          [checked]="isRoundGeneralMode"
+          (change)="onToggleRoundGeneral($event)"
+          color="accent"
+        >
+          Total acumulado
+        </mat-slide-toggle>
+      </div>
+    }
+
+    <!-- Loading state -->
+    @if (loading) {
+      <div class="loading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-circle spinner-1"></div>
+            <div class="spinner-circle spinner-2"></div>
+            <div class="spinner-circle spinner-3"></div>
+          </div>
+          <div class="loading-text">Carregando ranking...</div>
+          <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    }
+    @else {
+      <!-- Dados dos jogadores -->
+      @if (playersData.length > 0) {
+        <div class="table__title">
+          <div class="table__item">Pontos</div>
+        </div>
+
+        @for (player of playersData; track player.playerId || $index; let i = $index) {
+          <div
+            class="table__player
+              {{ i === 0 ? 'table__player__gold' : '' }}
+              {{ i === 1 ? 'table__player__silver' : '' }}
+              {{ i === 2 ? 'table__player__bronze' : '' }}"
+          >
+            <div class="table__icon">
+              @if (i === 0) {
+                🥇
+              } @else if (i === 1) {
+                🥈
+              } @else if (i === 2) {
+                🥉
+              } @else {
+                <span class="hide-medal"></span>
+              }
+            </div>
+
+            <div class="table__position">{{ player.position }}º</div>
+
+            <div class="table__arrow-container">
+              @if (shouldShowArrow(player)) {
+                <app-position-arrow
+                  [positionChange]="player.positionChange ?? 0"
+                ></app-position-arrow>
+              }
+            </div>
+
+            <div class="table__name">{{ getPlayerName(player.playerId) }}</div>
+            <div class="table__item__value">{{ getPlayerPoints(player) }}</div>
+          </div>
+        }
+      } @else {
+        <!-- Estado vazio -->
+        <div class="empty-state-message">
+          @if (selectedYear && filteredRoundSelectItems.length === 0) {
+            📅 Não há rodadas disponíveis para o ano {{ selectedYear }}.
+          } @else if (selectedRoundItem) {
+            🔒 Nenhum dado encontrado para a rodada selecionada.
+          } @else {
+            🔒 O ranking será liberado após a primeira rodada. Fique ligado!
+          }
+        </div>
+      }
+    }
+
+    </div>
+  </div>

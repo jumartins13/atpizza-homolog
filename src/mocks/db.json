@@ -1,0 +1,144 @@
+{
+    "players": [
+        {
+            "nome": "Patrick Wandelli",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        },
+        {
+            "nome": "Hugo Boccaletti",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        },
+        {
+            "nome": "André Telles",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        },
+        {
+            "nome": "Gustavo Barreto",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        },
+        {
+            "nome": "Newtinho",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        },
+        {
+            "nome": "Tales",
+            "personalDetails": {
+                "height": 1.80,
+                "startOfTheRanking": 2018,
+                "socialNetwork": "Instagram",
+                "country": "Brasil",
+                "playingstyle": "Destro",
+                "favoritePlayer": "Carlos Alcaraz"
+            }
+        }
+    ],
+    "rankings": [
+        {
+            "nome": "Vinícius Côrtes"
+        },
+        {
+            "nome": "Diego Peres"
+        },
+        {
+            "nome": "Renan Porto"
+        },
+        {
+            "nome": "André Máximo"
+        },
+        {
+            "nome": "Luis Guilhermo"
+        },
+        {
+            "nome": "Adilson Silva"
+        },
+        {
+            "nome": "Paulo Ricardo"
+        },
+        {
+            "nome": "Thiago Soller"
+        },
+        {
+            "nome": "Philipe Peixoto"
+        },
+        {
+            "nome": "Herika Cristina"
+        },
+        {
+            "nome": "Franklin Brito"
+        },
+        {
+            "nome": "Henrique Brito"
+        },
+        {
+            "nome": "Arthur Rodrigues"
+        },
+        {
+            "nome": "Raphael Portela"
+        },
+        {
+            "nome": "Silvia Lindgren"
+        },
+        {
+            "nome": "Matheus Leitão"
+        },
+        {
+            "nome": "Felipe Cesário"
+        },
+        {
+            "nome": "Marrafa"
+        },
+        {
+            "nome": "Andreza Cristina"
+        },
+        {
+            "nome": "Marcello Moraes"
+        },
+        {
+            "nome": "Jorge Pereira"
+        },
+        {
+            "nome": "Mariana Antonelli"
+        },
+        {
+            "nome": "Xiomara"
+        },
+        {
+            "nome": "Lucas Brazil"
+        }
+    ]
+}

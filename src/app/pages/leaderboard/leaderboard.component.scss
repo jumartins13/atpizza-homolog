@@ -1,0 +1,276 @@
+@import "../../../styles";
+@import "../../../styles/components/header";
+@import "../../../styles/components/loading";
+
+// Blur effect durante loading
+.container.loading-blur {
+  .global-table-header,
+  .groups-grid,
+  .empty-state-message {
+    filter: blur(3px);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+}
+
+.logo {
+  position: fixed;
+  bottom: 48px;
+  margin-left: 40px;
+  background-image: url("../../../assets/images/logo.png");
+  top: 25px;
+  right: 40px;
+}
+
+// Header actions (WhatsApp button)
+.header-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 5px;
+}
+
+.whatsapp-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0d4220 0%, #165f2c 100%);
+  color: white;
+  border: none;
+  padding: 5px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(1.1);
+    flex-shrink: 0;
+  }
+}
+
+// Global table header
+.global-table-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #1a1a1a;
+  padding: 0 5px;
+
+  .table__title {
+    color: white;
+    display: flex;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+  }
+}
+
+// Groups list layout (vertical for all screen sizes)
+.groups-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0; // No gap between groups
+  padding: 0 0 40px 0; // Bottom padding to show last group completely
+}
+
+.group-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 5px;
+
+  h3 {
+    margin: 0 5px $spacing-nano;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .group-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .pending-matches {
+      color: #ffc107;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+.group-empty {
+  padding: 40px $spacing-3xs; // 40px 16px
+  text-align: center;
+  color: #666;
+  font-style: italic;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+// Loading state
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px $spacing-3xs; // 60px 16px
+  color: white;
+
+  p {
+    margin: $spacing-sm 0 0; // 12px 0 0
+    color: #ccc;
+    font-size: 16px;
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  padding: 0 5px; // Small horizontal padding
+  justify-content: center;
+
+  &__title {
+    color: white;
+    display: flex;
+    margin-bottom: 5px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    background: #1a1a1a;
+    z-index: 10;
+    padding: 8px 0;
+  }
+
+  &__player {
+    background-image: linear-gradient(
+      to right,
+      rgba(130, 133, 130, 0) 0%,
+      rgba(130, 133, 130, 0.33) 20%,
+      rgba(130, 133, 130, 0.33) 70%,
+      rgba(130, 133, 130, 0) 110%
+    );
+    color: white;
+    display: flex;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  &__position {
+    width: 60%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  &__name {
+    width: 100%;
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__item {
+    width: 50%;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+}
+
+.first {
+  background-image: linear-gradient(
+    to right,
+    rgba(231, 214, 117, 0) 0%,
+    rgba(231, 214, 117, 0.3) 20%,
+    rgba(231, 214, 117, 0.3) 70%,
+    rgba(231, 214, 117, 0) 110%
+  );
+  color: white;
+}
+
+.top-two {
+  background-image: linear-gradient(
+    to right,
+    rgba(40, 167, 69, 0) 0%,
+    rgba(40, 167, 70, 0.275) 20%,
+    rgba(40, 167, 70, 0.263) 70%,
+    rgba(40, 167, 69, 0) 110%
+  );
+  color: #d4edda;
+}
+
+.third {
+  background-image: linear-gradient(
+    to right,
+    rgba(108, 117, 125, 0) 0%,
+    rgba(108, 117, 125, 0.33) 20%,
+    rgba(108, 117, 125, 0.33) 70%,
+    rgba(108, 117, 125, 0) 110%
+  );
+  color: #e2e3e5;
+}
+
+.last {
+  background-image: linear-gradient(
+    to right,
+    rgba(210, 72, 86, 0) 0%,
+    rgba(210, 72, 86, 0.33) 20%,
+    rgba(210, 72, 86, 0.33) 70%,
+    rgba(210, 72, 86, 0) 110%
+  );
+  color: white;
+}
+
+.games {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  &__pending {
+    color: white;
+    font-size: 0.9rem;
+  }
+}
+
+.link-whatsapp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.8rem;
+  background: #3b5a5a;
+  border-radius: 1.25rem;
+  width: 37%;
+}
+
+.empty-state-message {
+  color: white;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

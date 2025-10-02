@@ -1,0 +1,261 @@
+.search-wrapper {
+  position: relative;
+  margin: 5rem 1.25rem 0.625rem 0;
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
+.search-container {
+  position: relative;
+  min-width: 17.5rem;
+
+  @media (max-width: 768px) {
+    min-width: 11.25rem;
+  }
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.7rem 0.1rem 0.675rem 0.3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 16px !important;
+  outline: none;
+  transition: all 0.3s ease;
+  
+  /* Previne comportamentos indesejados no mobile */
+  -webkit-appearance: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+
+  &::placeholder {
+    color: #999;
+  }
+
+  &:focus {
+    border-color: #4ade80;
+    box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+    transform: none;
+  }
+}
+
+.search-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  /* Previne tap highlight no mobile */
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+  }
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: #4ade80;
+
+    @media (max-width: 768px) {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.players-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.players-list {
+  background: rgba(56, 58, 56, 0.95);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 0.5rem;
+  margin-top: 0.3125rem;
+  max-height: 18.75rem;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  /* Melhora o scroll no touch */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+
+  li {
+    padding: 0.75rem 0.9375rem;
+    color: white;
+    font-size: 16px; /* Consistência de tamanho */
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s;
+    
+    /* Previne seleção de texto e tap highlight mas permite scroll */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: auto;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
+
+    &.selected {
+      background: rgba(74, 222, 128, 0.3);
+      color: #4ade80;
+      font-weight: 500;
+    }
+    
+    /* Melhora a área de toque no mobile */
+    @media (max-width: 768px) {
+      padding: 1rem 0.9375rem;
+      font-size: 16px;
+    }
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #4ade80;
+    border-radius: 3px;
+  }
+}
+
+.players-hide {
+  display: none;
+}
+
+.highlight {
+  background: rgba(74, 222, 128, 0.4);
+  color: #4ade80;
+  font-weight: 600;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.empty-state {
+  padding: 1.25rem 0.9375rem;
+  text-align: center;
+  color: #999;
+  font-size: 16px; /* Consistência */
+  font-style: italic;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 1.5rem 0.9375rem;
+  }
+}
+
+// ===== AJUSTES PARA LANDSCAPE (COMPORTAMENTO NORMAL) =====
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .search-wrapper {
+    margin: 0.9rem 1.25rem 0.625rem 0;
+    padding: 0;
+    justify-content: flex-end; // Alinha à direita
+  }
+
+  .search-container {
+    min-width: 17.5rem; // Volta ao tamanho normal
+
+    @media (max-width: 768px) {
+      min-width: 11.25rem;
+    }
+  }
+
+  .search-input {
+    padding: 0.7rem 0.1rem 0.675rem 0.3rem; // Volta ao normal
+    font-size: 16px !important; // Tamanho normal
+  }
+
+  .search-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+
+      @media (max-width: 768px) {
+        width: 1rem;
+        height: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  .players-container {
+    z-index: 1000; // Z-index normal
+  }
+
+  .players-list {
+    max-height: 18.75rem; // Altura normal
+
+    li {
+      padding: 0.75rem 0.9375rem; // Padding normal
+      font-size: 16px !important; // Tamanho normal
+
+      @media (max-width: 768px) {
+        padding: 1rem 0.9375rem;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 1.25rem 0.9375rem; // Padding normal
+    font-size: 16px !important; // Tamanho normal
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+      padding: 1.5rem 0.9375rem;
+    }
+  }
+}
+
+/* Regras globais para prevenir zoom em todos os inputs */
+@media (max-width: 768px) {
+  input, select, textarea, button {
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+}

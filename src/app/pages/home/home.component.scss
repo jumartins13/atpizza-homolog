@@ -1,0 +1,106 @@
+@import "../../../styles/components/logo";
+
+:host {
+  display: flex;
+  height: 90%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  margin-bottom: 50px;
+}
+
+.logo {
+  background-image: url("../../../assets/images/logo.png");
+}
+
+.round-status {
+  text-align: center;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    color: #343a40;
+  }
+
+  p {
+    color: #6c757d;
+    padding: 0 53px;
+    white-space: pre-line;
+  }
+
+  .pulsing-message {
+    // animation: pulse 1s infinite;
+    color: #ffc107;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.apoio-section {
+  text-align: center;
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0;
+    font-size: 0.9em;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .apoio-top {
+    margin-bottom: 0;
+    min-height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .apoio-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; // Espaço entre apoio2 e apoio3
+  }
+
+  .apoio-image {
+    max-width: 120px;
+    height: auto;
+    opacity: 0.8;
+  }
+}
+
+// Apenas centralização para landscape
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  :host {
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+  }
+}

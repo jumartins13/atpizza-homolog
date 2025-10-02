@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create Solid PNG Icon</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .instructions {
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 2px solid #ccc;
+            display: block;
+            margin: 20px auto;
+            background: #000;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>🔧 Criar PNG Sólido para iOS</h2>
+        <p>Esta ferramenta cria um PNG com fundo preto SÓLIDO (sem transparência)</p>
+        <p>O iOS às vezes não aceita JPG para ícones, então vamos usar PNG sem canal alpha</p>
+    </div>
+
+    <canvas id="canvas" width="1024" height="1024"></canvas>
+    <button onclick="downloadPNG()">📥 Download PNG Sólido (1024x1024)</button>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Força contexto sem transparência
+        ctx.globalCompositeOperation = 'source-over';
+        
+        function createSolidIcon() {
+            // Preenche TUDO com preto sólido primeiro
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            // Carrega o logo original
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                // Calcula tamanho proporcional
+                const maxSize = 850; // 83% do canvas
+                const ratio = Math.min(maxSize / img.width, maxSize / img.height);
+                const width = img.width * ratio;
+                const height = img.height * ratio;
+                
+                // Centraliza
+                const x = (1024 - width) / 2;
+                const y = (1024 - height) / 2;
+                
+                // Desenha o logo
+                ctx.drawImage(img, x, y, width, height);
+            };
+            img.src = 'images/logo.png';
+        }
+        
+        function downloadPNG() {
+            // Força fundo preto novamente
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function() {
+                const maxSize = 850;
+                const ratio = Math.min(maxSize / img.width, maxSize / img.height);
+                const width = img.width * ratio;
+                const height = img.height * ratio;
+                const x = (1024 - width) / 2;
+                const y = (1024 - height) / 2;
+                
+                ctx.drawImage(img, x, y, width, height);
+                
+                // Cria PNG sem transparência
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'apple-touch-icon-solid.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    alert('PNG sólido baixado! Substitua o arquivo apple-touch-icon.png atual por este.');
+                }, 'image/png', 1.0);
+            };
+            img.src = 'images/logo.png';
+        }
+        
+        // Inicia quando carrega
+        window.onload = createSolidIcon;
+    </script>
+</body>
+</html>

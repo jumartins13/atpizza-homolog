@@ -1,0 +1,38 @@
+<nav class="menu">
+
+    <!-- ul.list>li.list-item*5>a -->
+    <ul class="list">
+        <li class="list-item perfil">
+            <a (click)="goToMyProfile()">
+                <ng-icon class="list-item__icon" name="heroUsers"></ng-icon>
+                Meu perfil
+            </a>
+        </li>
+        <li class="list-item">
+            <a routerLink="/app/rankings">
+                <ng-icon class="list-item__icon" name="heroTrophy"></ng-icon>
+                Ranking
+            </a>
+        </li>
+        
+        <li class="list-item">
+            <a routerLink="/app/leaderboard">
+                <ng-icon class="list-item__icon" name="matLeaderboardSharp"></ng-icon>
+                Leaderboard
+            </a>
+        </li>
+        <li class="list-item">
+            <a (click)="goToMyScores()">
+                <ng-icon class="list-item__icon" name="matSportsTennisSharp"></ng-icon>
+                Confrontos
+            </a>
+        </li>
+        <li class="list-item">
+            <a (click)="goToMyCalendar()">
+                <ng-icon class="list-item__icon" name="matCalendarMonthSharp"></ng-icon>
+                Horários
+            </a>
+        </li>
+    </ul>
+</nav>
+<app-side-menu></app-side-menu>

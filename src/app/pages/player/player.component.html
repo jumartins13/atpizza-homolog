@@ -1,0 +1,194 @@
+<div class="header"></div>
+<div class="logo middle"></div>
+
+<app-autocomplete
+  (playerSelected)="onPlayerSelected($event)"
+></app-autocomplete>
+
+<div class="tabs"></div>
+
+@if(loading) {
+<div class="loading"></div>
+}
+
+<div class="container">
+  @if (!loading && player && playerForm) {
+  <form [formGroup]="playerForm">
+    <div class="profile">
+      <div class="profile__field">
+        <input
+          class="profile__name__input"
+          type="text"
+          formControlName="name"
+          (blur)="onBlur()"
+          (focus)="onFocus()"
+        />
+        @if(showError && playerNameControl?.errors){
+        <div class="error-message">Campo obrigatório</div>
+        } @if (playerRankingPosition !== null) {
+        <div class="ranking-position"># {{ playerRankingPosition }}</div>
+        }
+      </div>
+
+      <div class="profile__avatar"
+           [class.disabled]="!canEditProfile()"
+           (click)="canEditProfile() && !previewAvatarUrl ? fileInput.click() : null">
+        @if(previewAvatarUrl) {
+          <img width="120px" [src]="previewAvatarUrl" (click)="handleImageClick($event)" />
+          @if(canEditProfile()) {
+            <div class="edit-overlay" (click)="handleEditClick($event)">
+              <ng-icon name="matEditSharp" size="24"></ng-icon>
+            </div>
+          }
+        } @else {
+          @if(canEditProfile()) {
+            <ng-icon name="matCameraAltSharp" size="32"></ng-icon>
+          } @else {
+            <ng-icon name="matNoPhotographySharp" size="32" class="disabled-icon"></ng-icon>
+          }
+        } 
+        
+        @if(uploadingAvatar) {
+          <div class="upload-spinner"></div>
+        }
+      
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          style="display: none"
+          (change)="uploadFile($event)"
+        />
+      </div>
+      
+      <!-- Modal do Image Cropper -->
+      @if(showCropper) {
+  <app-avatar-cropper
+    [imageChangedEvent]="imageChangedEvent"
+    (cropped)="confirmCrop($event)"
+    (cancel)="cancelCrop()"
+  />
+}
+    </div>
+
+    <h2 class="details">Detalhes Pessoais</h2>
+    <div class="details__list" formGroupName="details">
+      <div class="details__item">
+        <span>Altura</span>
+        <div class="details__value">
+          <input
+            class="details__item__height"
+            type="number"
+            formControlName="height"
+            (blur)="onBlur()"
+          />
+          <span class="details__item__height__unit">m</span>
+        </div>
+      </div>
+
+      <div class="details__item">
+        <span>País</span>
+        <div class="details__value">
+          <input
+            class="details__item__input"
+            type="text"
+            formControlName="country"
+            (blur)="onBlur()"
+          />
+          @if(playerForm.get('details.country')?.value) {
+          <app-country-flag
+          [countryName]="playerForm.get('details.country')?.value || ''"
+          [size]="22"
+          >
+          </app-country-flag>
+          }
+        </div>
+      </div>
+
+      <div class="details__item">
+        <span>Início no Ranking</span>
+        <div class="details__value">
+          <select
+            class="details__item__input"
+            formControlName="startOfTheRanking"
+            (blur)="onBlur()"
+          >
+            <option value="">-</option>
+            @for(year of years; track $index) {
+            <option [value]="year">{{ year }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="details__item">
+        <span>Rede Social</span>
+        <div class="details__value social-container">
+          <input
+            class="details__item__input"
+            type="text"
+            formControlName="socialNetwork"
+            (blur)="onBlur()"
+            placeholder="@usuario"
+          />
+
+          @if (getSocialLinkDetails(); as socialDetails) {
+          <a class="insta-icon"
+            [href]="socialDetails.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+          <img src="./images/insta.PNG" width="24" />
+          </a>
+          }
+        </div>
+      </div>
+
+      <div class="details__item">
+        <span>Mão Principal</span>
+        <div class="details__value">
+          <select
+            class="details__item__input"
+            formControlName="mainHand"
+            (blur)="onBlur()"
+          >
+            <option value="">-</option>
+            @for(option of mainHandOptions; track option) {
+            <option [value]="option.value">{{ option.title }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="details__item">
+        <span>Backhand</span>
+        <div class="details__value">
+          <select
+            class="details__item__input"
+            formControlName="backHand"
+            (blur)="onBlur()"
+          >
+            <option value="">-</option>
+            @for(option of backHandOptions; track option) {
+            <option [value]="option">{{ getBackHandLabel(option) }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+  }
+</div>
+
+<!-- Modal para ampliar foto -->
+@if(showPhotoModal) {
+  <div class="photo-modal" (click)="closePhotoModal()">
+    <div class="photo-modal__overlay"></div>
+    <div class="photo-modal__content" (click)="$event.stopPropagation()">
+      <button class="photo-modal__close" (click)="closePhotoModal()">
+        <ng-icon name="matCloseSharp" size="24"></ng-icon>
+      </button>
+      <img [src]="previewAvatarUrl" alt="Foto do jogador" class="photo-modal__image">
+    </div>
+  </div>
+}

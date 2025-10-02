@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ATPizza Icon 1024x1024</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .icon-container {
+            width: 1024px;
+            height: 1024px;
+            background: #000000;
+            border-radius: 226px; /* iOS icon radius for 1024px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .logo {
+            width: 85%;
+            height: auto;
+            object-fit: contain;
+        }
+        .instructions {
+            text-align: center;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>🎯 Ícone ATPizza 1024x1024px</h2>
+        <p><strong>Instruções:</strong></p>
+        <ol>
+            <li>Clique com botão direito na imagem preta abaixo</li>
+            <li>Selecione "Salvar imagem como..."</li>
+            <li>Salve como "apple-touch-icon.png"</li>
+            <li>Substitua o arquivo atual no projeto</li>
+        </ol>
+        <p style="color: #666;">Fundo preto sólido sem transparência - 1024x1024px</p>
+    </div>
+
+    <canvas id="iconCanvas" width="1024" height="1024" style="border: 2px solid #ccc; display: block; margin: 20px auto;"></canvas>
+
+    <button class="download-btn" onclick="downloadIcon()">📥 Download Ícone 1024x1024</button>
+
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function createIcon() {
+            // Fundo preto sólido
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            // Carrega e desenha o logo
+            const img = new Image();
+            img.onload = function() {
+                // Centraliza o logo ocupando 85% do espaço
+                const logoSize = 850;
+                const x = (1024 - logoSize) / 2;
+                const y = (1024 - logoSize) / 2;
+                
+                ctx.drawImage(img, x, y, logoSize, logoSize * (img.height / img.width));
+            };
+            img.src = 'images/logo.png';
+        }
+        
+        function downloadIcon() {
+            // Força fundo preto novamente
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, 1024, 1024);
+            
+            const img = new Image();
+            img.onload = function() {
+                const logoSize = 850;
+                const aspectRatio = img.height / img.width;
+                const logoHeight = logoSize * aspectRatio;
+                const x = (1024 - logoSize) / 2;
+                const y = (1024 - logoHeight) / 2;
+                
+                ctx.drawImage(img, x, y, logoSize, logoHeight);
+                
+                // Download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = 'apple-touch-icon-1024.png';
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+            };
+            img.src = 'images/logo.png';
+        }
+        
+        // Cria o ícone quando a página carrega
+        window.onload = createIcon;
+    </script>
+</body>
+</html>

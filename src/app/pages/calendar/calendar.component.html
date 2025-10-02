@@ -1,0 +1,205 @@
+<div class="header">
+  <div class="logo middle"></div>
+
+  <app-autocomplete
+    (playerSelected)="getPlayer($event)"
+  ></app-autocomplete>
+
+  <div class="tabs"></div>
+</div>
+
+
+
+@if (canEditCalendar) {
+  <div class="container" [class.with-selection-bar]="showSelectionBar">
+
+    <div class="header-card">
+      <div class="header-content">
+        <h1 class="title">Disponibilidade Semanal - Tênis</h1>
+      </div>
+
+    
+      <div class="header-controls">
+        <div class="week-navigation">
+          <button (click)="navigateWeek(-1)" class="nav-button" type="button" aria-label="Semana anterior">←</button>
+          <h2 class="week-title">{{ formatWeekRange() }}</h2>
+          <button (click)="navigateWeek(1)" class="nav-button" type="button" aria-label="Próxima semana">→</button>
+        </div>
+        
+        @if(hasAvailabilityData()) {
+          <div class="header-actions">
+            <button class="summary-link" (click)="openSummaryPopup()" type="button">
+              Ver Resumo
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="loading">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-circle spinner-1"></div>
+            <div class="spinner-circle spinner-2"></div>
+            <div class="spinner-circle spinner-3"></div>
+          </div>
+          <div class="loading-text">Carregando calendário...</div>
+          <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+  }
+  @else {
+
+    <div class="calendar-scroll-wrapper" [class.select-mode]="multiSelectDragging">
+      <div class="calendar-container">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th class="time-header">
+                <ng-icon name="matAccessTimeSharp" size="16" color="white"></ng-icon>
+              </th>
+              @for (day of currentWeek; track $index) {
+                <th [class]="getDayHeaderClasses($index)">{{ formatDateHeader(day) }}</th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (slot of timeSlots; track slot.time) {
+              <tr class="time-row">
+                <td class="time-label">{{ slot.displayTime }}</td>
+
+                @for (day of currentWeek; track $index) {
+                  <td class="cell-td">
+                    <div
+                      class="cell-surface {{ getCellClasses($index, slot.time) }}"
+                      [attr.data-day]="$index"
+                      [attr.data-time]="slot.time"
+                      (pointerdown)="onPointerDown($event, $index, slot.time)"
+                      (pointermove)="onPointerMove($event)"
+                      (pointerup)="onPointerUp($event)"
+                      (pointercancel)="onPointerCancel($event)"
+                    >
+                      @if (getSlotStatus($index, slot.time) && !isCellPendingSelection($index, slot.time)) {
+                        <div class="status-indicator">
+                          <span class="status-text">
+                            @switch (getSlotStatus($index, slot.time)) {
+                              @case ('available') { Livre }
+                              @case ('maybe') { Talvez }
+                            }
+                          </span>
+                        </div>
+                      }
+
+                      @if (isCellPendingSelection($index, slot.time)) {
+                        <div class="pending-indicator" title="Seleção pendente">
+                          <ng-icon name="matAccessTimeSharp" size="16"></ng-icon>
+                        </div>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+  </div>
+}
+
+
+@if (canEditCalendar) {
+  <app-selection-bar
+    [show]="showSelectionBar"
+    [loading]="loading"
+    [pendingSelections]="pendingSelections"
+    [pendingStatus]="pendingStatus"
+    (statusChange)="pendingStatus = $event"
+    (apply)="applyPendingSelections()"
+    (clear)="clearPendingSelections()"
+  ></app-selection-bar>
+}
+
+
+@if (isViewerOnly) {
+  
+  <div class="container">
+    <div class="header-card">
+      <div class="header-content">
+        <h1 class="title">Disponibilidade de {{ viewingPlayerName || 'Jogador' }}</h1>
+      </div>
+
+      <div class="header-controls">
+        <div class="week-navigation">
+          <button (click)="navigateWeek(-1)" class="nav-button" type="button" aria-label="Semana anterior">←</button>
+          <h2 class="week-title">{{ formatWeekRange() }}</h2>
+          <button (click)="navigateWeek(1)" class="nav-button" type="button" aria-label="Próxima semana">→</button>
+        </div>
+      </div>
+
+      <!-- Legenda para visualização de outros jogadores
+  <div class="viewer-legend">
+    <div class="legend-item">
+      <span class="dot dot-available"></span>
+      <span>Disponível</span>
+    </div>
+    <div class="legend-item">
+      <span class="dot dot-maybe"></span>
+      <span>Talvez</span>
+    </div>
+  </div> -->
+    </div>
+
+    <div
+      class="calendar-scroll-wrapper"
+      [class.compact-readonly]="isViewerOnly"
+    >
+      <div class="calendar-container">
+        <table class="calendar-table compact readonly">
+          <thead>
+            <tr>
+              <th class="time-header">
+                <ng-icon name="matAccessTimeSharp" size="16" color="white"></ng-icon>
+              </th>
+              @for (day of currentWeek; track $index) {
+                <th [class]="getDayHeaderClasses($index)">{{ formatDateHeader(day) }}</th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (slot of timeSlots; track slot.time) {
+              <tr class="time-row">
+                <td class="time-label">{{ slot.displayTime }}</td>
+
+                @for (day of currentWeek; track $index) {
+                  <td class="cell-td" [class]="isPastDay($index) ? 'past-day-column' : ''">
+                    <div class="cell-surface readonly {{ getStatusClasses(getSlotStatus($index, slot.time)) }}" [class]="isPastDay($index) ? 'past-day-column' : ''">
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+}
+
+<!-- Popup de Resumo -->
+<app-calendar-summary-popup
+  [show]="showSummaryPopup"
+  [currentWeek]="currentWeek"
+  [availabilities]="availabilities"
+  [viewingPlayerId]="viewingPlayerId"
+  (close)="closeSummaryPopup()"
+></app-calendar-summary-popup>

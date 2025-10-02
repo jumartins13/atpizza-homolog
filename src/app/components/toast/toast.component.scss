@@ -1,0 +1,35 @@
+.toast {
+  position: fixed;
+  top: 20px; // Canto superior
+  right: 20px; // Canto direito
+  padding: 0.5rem 1rem; // Menor padding
+  border-radius: 6px;
+  color: white;
+  font-weight: 500; // Menos bold
+  font-size: 0.875rem; // Fonte menor
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: slideInFromRight 0.3s ease;
+  z-index: 9999;
+  max-width: 300px; // Largura máxima
+  word-wrap: break-word;
+
+  &.success { background-color: #4f6050;}
+  &.error   { background-color: #83221b; }
+  &.info    { background-color: #144b78; }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

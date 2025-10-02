@@ -1,0 +1,19 @@
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+
+  ng-icon {
+    font-size: 1rem;
+    margin-right: 2px;
+  }
+
+  &.up {
+    color: #3ddc91;
+  }
+
+  &.down {
+    color: #ff6b6b;
+  }
+}

@@ -1,0 +1,92 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Regras para jogadores - permitir verificação durante login
+    match /players/{userId} {
+      // Permitir leitura do próprio documento para verificação durante login
+      allow read: if request.auth != null &&
+                  request.auth.uid == userId &&
+                  request.auth.token.email_verified == true;
+      // Permitir query por email para usuários autenticados durante login
+      allow read: if request.auth != null &&
+                  request.auth.token.email_verified == true &&
+                  resource.data.email == request.auth.token.email;
+      // Escrita para usuários autenticados editando seus próprios dados (por email)
+      allow write: if request.auth != null &&
+                   request.auth.token.email_verified == true &&
+                   resource.data.email == request.auth.token.email;
+      // TEMPORÁRIO: Permitir escrita para qualquer jogador registrado para debug
+      allow write: if request.auth != null &&
+                   request.auth.token.email_verified == true;
+    }
+
+    // Função para verificar se usuário é jogador cadastrado (após conseguir ler)
+    function isRegisteredPlayer() {
+      return request.auth != null &&
+             request.auth.token.email_verified == true;
+      // Note: Verificação de existência do player é feita no client-side
+      // pois não é possível fazer query por email nas regras do Firestore
+    }
+
+    // Matches - jogadores cadastrados podem ler todos, editar apenas os seus
+    match /matches/{matchId} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer() &&
+                   (resource.data.player1Id == request.auth.uid ||
+                    resource.data.player2Id == request.auth.uid ||
+                    request.auth.token.admin == true);
+    }
+
+    // Matches dentro de grupos - jogadores cadastrados podem ler todos e editar partidas onde participam
+    match /groups/{groupId}/matches/{matchId} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer();
+      // TEMPORÁRIO: Permitir escrita para qualquer jogador registrado para debug
+      // ORIGINAL: allow write: if isRegisteredPlayer() &&
+      //                        (resource.data.player1.id == request.auth.uid ||
+      //                         resource.data.player2.id == request.auth.uid ||
+      //                         request.auth.token.admin == true);
+    }
+
+    // Rounds - apenas leitura para jogadores cadastrados
+    match /rounds/{roundId} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer() && request.auth.token.admin == true;
+    }
+
+    // Leaderboards - apenas leitura para jogadores cadastrados
+    match /leaderboards/{document} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer() && request.auth.token.admin == true;
+    }
+
+    // Rankings - apenas leitura para jogadores cadastrados
+    match /rankings/{document} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer() && request.auth.token.admin == true;
+    }
+
+    // System status - permitir leitura para qualquer usuário autenticado (mesmo sem email verificado)
+    match /system/{document} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    // Availability Calendars - jogadores podem ler/escrever seus próprios calendários
+    match /availabilityCalendars/{playerId} {
+      allow read: if isRegisteredPlayer();
+      // TEMPORÁRIO: Permitir escrita para qualquer jogador registrado para debug
+      allow write: if isRegisteredPlayer();
+      // ORIGINAL: allow write: if isRegisteredPlayer() &&
+      //                        (request.auth.uid == playerId || request.auth.token.admin == true);
+    }
+
+    // Outras coleções - apenas leitura para jogadores cadastrados
+    match /{document=**} {
+      allow read: if isRegisteredPlayer();
+      allow write: if isRegisteredPlayer() && request.auth.token.admin == true;
+    }
+  }
+}

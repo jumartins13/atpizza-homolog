@@ -1,0 +1,317 @@
+@import "../../../styles";
+
+.side-menu {
+  position: fixed;
+  bottom: 0;
+  height: 100%;
+  width: 10.5rem;
+  background-color: $color-primary;
+  display: flex;
+  flex-direction: column;
+  z-index: 100; // Z-index original
+
+  &__mask {
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: #000, $alpha: 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2; // Z-index original
+    backdrop-filter: blur(2px); // Blur na vertical também
+    -webkit-backdrop-filter: blur(2px); // Safari support
+  }
+
+  .profile {
+    text-align: center;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    &__user {
+      text-align: left;
+      width: 60%;
+
+      &__line {
+        width: 100%;
+      }
+
+      &__username {
+        color: white;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-wrap: nowrap;
+        line-height: 12px;
+      }
+    }
+
+    &__avatar {
+      
+      box-sizing: border-box;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: white;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+.menu {
+  padding: 0;
+  position: relative;
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+.sub-menu {
+  position: absolute;
+  bottom: 4.5rem;
+  width: 100%;
+
+  &__first {
+    position: relative;
+    width: 100%;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0px 25px;
+    margin: 0;
+
+    &__first {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: absolute;
+      gap: 5px;
+      padding: 10px 25px;
+    }
+
+    &__item {
+      padding-bottom: $spacing-nano; // 8px
+    }
+  }
+}
+
+a {
+  color: white;
+  text-decoration: none; // Remove o sublinhado padrão
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.bar-icon {
+  position: fixed;
+  top: 30px;
+  font-size: 30px;
+  color: white;
+  left: 20px;
+  cursor: pointer;
+  z-index: 50; // Z-index menor que o side menu (100) na vertical
+}
+
+.signature {
+  position: absolute;
+  right: 15px;
+  bottom: 5px;
+  text-align: right;
+  line-height: 15px;
+
+  &__title {
+    font-size: 8px;
+    color: white;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  &__name {
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-size: 11px;
+    color: white;
+    font-style: italic;
+    overflow: hidden;
+    animation: typing 2s steps(20, end);
+    white-space: nowrap;
+    text-decoration: underline;
+  }
+}
+
+.logo {
+  position: fixed;
+  bottom: 55px;
+  margin: 0 38px;
+  background-image: url("../../../assets/images/logo.png");
+}
+
+// Animação da assinatura (escrita)
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+// Media queries para modo paisagem (landscape)
+@media screen and (orientation: landscape) {
+  .side-menu {
+    height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .bar-icon {
+    top: 15px;
+    left: 15px;
+    font-size: 25px;
+    // Z-index já definido acima
+  }
+
+  .logo {
+    bottom: 35px;
+    margin: 0 25px;
+  }
+
+  .signature {
+    bottom: 8px;
+    right: 10px;
+    
+    &__title {
+      font-size: 7px;
+    }
+    
+    &__name {
+      font-size: 10px;
+    }
+  }
+
+  .sub-menu {
+    bottom: 3rem;
+  }
+
+  .profile {
+    padding: 15px 0;
+    
+    &__avatar {
+      width: 40px;
+      height: 40px;
+    }
+    
+    &__user {
+      &__username {
+        font-size: 0.7rem;
+        line-height: 10px;
+      }
+    }
+  }
+}
+
+// Menu com overlay no landscape - bloqueia interação
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .side-menu {
+    z-index: 2000 !important; // Acima de tudo no landscape
+  }
+
+  .side-menu__mask {
+    z-index: 1999 !important; // Logo abaixo do menu, mas acima das tabs
+    backdrop-filter: blur(2px); // Blur original
+    pointer-events: auto; // Permite clique no mask para fechar
+  }
+
+  .bar-icon {
+    z-index: 1500 !important; // Atrás do side menu (2000) - desaparece quando menu abre
+  }
+
+// Para telas muito pequenas em paisagem (celulares)
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .side-menu {
+    width: 9rem;
+    padding: 0.5rem 0; // Padding interno para melhor distribuição
+  }
+
+  .menu {
+    margin-bottom: 0.5rem; // Reduz espaço entre elementos
+    padding: 0 0.5rem; // Padding lateral
+  }
+
+  .profile {
+    padding: 0.5rem 0;
+    gap: 0.25rem; // Menor espaço entre avatar e texto
+
+    &__avatar {
+      width: 30px;
+      height: 30px;
+    }
+
+    &__user {
+      width: 65%; // Mais espaço para o texto
+
+      &__username {
+        font-size: 0.6rem;
+        line-height: 8px;
+      }
+    }
+  }
+
+  .sub-menu {
+    bottom: 2rem; // Mais próximo do final
+
+    &__list {
+      padding: 0px 0.75rem;
+      gap: 0.25rem; // Espaço entre itens
+
+      &__first {
+        padding: 0.5rem 0.75rem;
+        gap: 0.25rem; // Espaço entre links
+      }
+
+      &__item {
+        padding-bottom: 0.25rem; // Menor espaçamento
+      }
+    }
+  }
+
+  a {
+    font-size: 0.65rem;
+    line-height: 1.2; // Melhor espaçamento de linha
+    padding: 0.1rem 0; // Pequeno padding vertical
+  }
+
+  .logo {
+    display: none !important; // Remove logo no landscape
+  }
+
+  .signature {
+    bottom: 0.25rem;
+    right: 0.5rem;
+    line-height: 1;
+
+    &__title {
+      font-size: 5px;
+      margin-bottom: 1px;
+    }
+
+    &__name {
+      font-size: 8px;
+    }
+  }
+}
+}

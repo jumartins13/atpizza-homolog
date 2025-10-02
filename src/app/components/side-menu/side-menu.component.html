@@ -1,0 +1,58 @@
+@if (isOpen) {
+<div class="side-menu__mask"></div>
+<nav class="side-menu" [@openClose] appClickOutside (clickOutside)="isOpen = false">
+    <!-- .profile>.avatar+.infos -->
+    <div class="profile">
+        <div class="profile__avatar">
+            <img width="50" [src]="userAvatarUrl" (error)="userAvatarUrl = DEFAULT_AVATAR">
+        </div>
+        <div class="profile__user">
+            <h2 class="profile__user__username">{{ username }}</h2>
+            <a href="#" (click)="goToMyProfile(); toggleMenu(); $event.preventDefault()">👤 Ver perfil</a>
+        </div>
+        <div class="sub-menu__first">
+            <hr class="profile__user__line">
+            <ul class="sub-menu__list__first">
+                <li class="menu">
+                  <a href="" routerLink="/app/home" (click)="toggleMenu()">🏠 Menu</a>
+                </li>
+                <li class="menu">
+                    <a href="" routerLink="/app/rules" (click)="toggleMenu()">📖 Regras</a>
+                  </li>
+                <!-- <li class="menu">
+                  <a href="" routerLink="/tournament" (click)="toggleMenu()">🏆 Torneio 2026</a>
+                </li> -->
+                <li class="menu">
+                    <a href="" routerLink="/app/pizza" (click)="toggleMenu()">🍕 Pizzas</a>
+                  </li>
+              </ul>
+        </div>
+    </div>
+
+    <div class="sub-menu">
+        <hr>
+        <ul class="sub-menu__list">
+            <li class="sub-menu__list__item">
+                <a href="https://chat.whatsapp.com/JBYKZfE9JMQKv7xedlHeey?mode=ems_copy_t" target="_blank" rel="noopener noreferrer">
+                    <img src="./images/whatsapp.PNG" alt="WhatsApp" width="15" height="15" style="vertical-align: middle">
+                    Contato
+                  </a>
+            </li>
+            <li class="sub-menu__list__item">
+                <a href="" routerLink="/app/about" (click)="toggleMenu()">⁉️ Sobre</a>
+            </li>
+            <li class="sub-menu__list__item">
+                <a href="/login" (click)="logout()">🚪 Sair</a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="logo small"></div>
+    <div class="signature">
+        <p class="signature__title">👩🏼‍💻 App Developer,</p>
+        <p class="signature__name"><strong>Juliana Martins</strong></p>
+    </div>
+
+</nav>
+}
+<ng-icon (click)="toggleMenu()" class="bar-icon" name="heroBars3"></ng-icon>

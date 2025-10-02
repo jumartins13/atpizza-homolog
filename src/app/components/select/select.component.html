@@ -1,0 +1,30 @@
+<div class="select-wrapper">
+    @if (label) {
+      <label class="select-label">{{ label }}</label>
+    }
+  
+    <div class="custom-select"
+         #selectContainer
+         [class.select-open]="isSelectOpen"
+         (blur)="onBlur()"
+         >
+      
+      <div class="select-selected"
+           (click)="toggleSelect()"
+           [class.select-arrow-active]="isSelectOpen">
+        {{ selectedItem?.name }}
+      </div>
+      
+      <div class="select-items"
+           [class.select-hide]="!isSelectOpen">
+        @for (item of filteredItems; track item.value) {
+          <div class="select-items__group"
+               (click)="selectItem(item)"
+               [class.selected]="selectedItem?.value === item.value">
+            {{ item.name }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  

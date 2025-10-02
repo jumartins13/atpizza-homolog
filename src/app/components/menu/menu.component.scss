@@ -1,0 +1,60 @@
+@import '../../../styles';
+
+.menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: $color-primary;
+  z-index: 50; // Ensure menu is above other content but below side-menu
+
+  .list {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+
+    .list-item {
+      position: relative;
+
+      &__icon {
+        margin: 0.25rem; // 4px
+        font-size: 1rem; // 16px
+      }
+
+      &:hover {
+        transform: scale(1.2);
+        transition: transform 0.3s;
+      }
+
+      &.perfil {
+        a {
+          font-size: 0.5rem; // 8px
+        }
+      }
+
+      a {
+        color: white;
+        font-size: 0.5rem; // 8px
+        text-decoration: none;
+        cursor: pointer;
+        padding: $spacing-nano; // 8px
+        transition: color 0.3s;
+        text-align: center;
+        align-items: center;
+        flex-direction: column;
+        display: flex;
+        min-height: 48px; // Minimum touch target for mobile
+        min-width: 48px;  // Minimum touch target for mobile
+        justify-content: center;
+        
+        // Increase touch area on mobile
+        @media (max-width: 768px) {
+          padding: 12px 8px;
+          font-size: 0.6rem; // Slightly larger text on mobile
+        }
+      }
+    }
+  }
+}

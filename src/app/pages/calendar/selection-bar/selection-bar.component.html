@@ -1,0 +1,58 @@
+<div class="selection-bar" [class.show]="show">
+
+  <div class="selection-bar-content">
+    <div class="selection-info">
+      <div class="selection-count">
+        <ng-icon name="matEditCalendarSharp" width="20" height="20"></ng-icon>
+        <span class="count-badge">{{ pendingSelections.length }}</span>
+        <span>horário(s) selecionado(s)</span>
+      </div>
+      <div class="selection-description">
+        {{ getDescription() }}
+      </div>
+    </div>
+
+    <div class="selection-controls">
+      <div class="status-selector">
+        <button
+          type="button"
+          class="status-option"
+          [class.active]="pendingStatus === 'available'"
+          (click)="setStatus('available')"
+        >
+          <ng-icon name="matCheckSharp" width="14" height="14"></ng-icon>
+          <span class="status-text">Disponível</span>
+        </button>
+
+        <button
+          type="button"
+          class="status-option"
+          [class.active]="pendingStatus === 'maybe'"
+          (click)="setStatus('maybe')"
+        >
+          <ng-icon name="matQuestionMarkSharp" width="14" height="14"></ng-icon>
+          <span class="status-text">Talvez</span>
+        </button>
+
+        <button
+          type="button"
+          class="status-option"
+          [class.active]="pendingStatus === 'unavailable'"
+          (click)="setStatus('unavailable')"
+        >
+          <ng-icon name="matRemoveSharp" width="14" height="14"></ng-icon>
+          <span class="status-text">Remover</span>
+        </button>
+      </div>
+
+      <div class="action-buttons">
+        <button (click)="onApply()" class="apply-button" type="button">
+          <ng-icon name="matCheckSharp" width="16" height="16"></ng-icon>
+        </button>
+        <button (click)="onClear()" class="clear-button" type="button">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

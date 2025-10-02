@@ -1,0 +1,32 @@
+<router-outlet></router-outlet>
+
+@if (isNotLoginRoute) {
+<app-menu></app-menu>
+}
+
+@if (isBlocked) {
+<div class="app-block-overlay">
+  <div class="overlay-box">
+    <p class="overlay-text">{{ message }}</p>
+  </div>
+</div>
+}
+
+<!-- PWA Install Banner -->
+@if (showInstallPrompt) {
+<div class="pwa-install-banner">
+  <div class="pwa-install-content">
+    <div class="pwa-install-info">
+      <div class="pwa-install-icon">📱</div>
+      <div class="pwa-install-text">
+        <strong>Instalar ATPizza</strong>
+        <p>Adicione o app à sua tela inicial</p>
+      </div>
+    </div>
+    <div class="pwa-install-actions">
+      <button class="pwa-install-btn" (click)="installPWA()">Instalar</button>
+      <button class="pwa-dismiss-btn" (click)="dismissInstallPrompt()">✕</button>
+    </div>
+  </div>
+</div>
+}

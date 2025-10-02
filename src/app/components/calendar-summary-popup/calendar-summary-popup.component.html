@@ -1,0 +1,59 @@
+@if (show) {
+  <div class="popup-overlay" (click)="onClose()">
+    <div class="popup-container" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h3>Resumo da Disponibilidade</h3>
+        <button class="close-btn" (click)="onClose()" type="button" aria-label="Fechar">✕</button>
+      </div>
+      
+      <div class="popup-content">
+        <div class="week-info">
+          <h4>{{ formatWeekRange() }}</h4>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item">
+            <span class="dot dot-available"></span>
+            <span>Disponível</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot dot-maybe"></span>
+            <span>Talvez</span>
+          </div>
+        </div>
+        
+        <div class="calendar-summary">
+          <table class="calendar-table compact readonly">
+            <thead>
+              <tr>
+                <th class="time-header">
+                  <ng-icon name="matAccessTimeSharp" size="16" color="white"></ng-icon>
+                </th>
+                @for (day of currentWeek; track $index) {
+                  <th class="day-header">{{ formatDateHeader(day) }}</th>
+                }
+              </tr>
+            </thead>
+            
+            <tbody>
+              @for (slot of timeSlots; track slot.time) {
+                <tr class="time-row">
+                  <td class="time-label">{{ slot.displayTime }}</td>
+                  
+                  @for (day of currentWeek; track $index) {
+                    <td class="cell-td">
+                      <div class="cell-surface readonly {{ getStatusClasses(getSlotStatus($index, slot.time)) }}">
+                      </div>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+}

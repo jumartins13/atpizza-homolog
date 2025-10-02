@@ -1,0 +1,160 @@
+@import '../../../styles';
+@import '../../../styles/layout';
+
+.select-wrapper {
+  position: relative;
+  min-width: 8.75rem; // 140px
+  margin: 0.625rem 0.75rem; // 10px 12px
+  z-index: 1;
+}
+
+.select-label {
+  font-size: 0.75rem; // 12px
+  color: #999;
+  margin-bottom: 0.3125rem; // 5px
+  display: block;
+  font-weight: 500;
+}
+
+.custom-select {
+  position: relative;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem; // 8px
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $color-secondary;
+    background: rgba(74, 222, 128, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-secondary;
+    box-shadow: 0 0 0 0.125rem rgba(74, 222, 128, 0.2); // 2px
+  }
+
+  &.select-open {
+    border-color: $color-secondary;
+    box-shadow: 0 0 0 0.125rem rgba(74, 222, 128, 0.2); // 2px
+  }
+}
+
+.select-selected {
+  padding: 0.75rem 2.375rem 0.75rem 0.9375rem; // 12px 38px 12px 15px
+  color: white;
+  font-size: 0.875rem; // 14px
+  position: relative;
+  user-select: none;
+
+  &::after {
+    content: '▼';
+    position: absolute;
+    right: 0.9375rem; // 15px
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-secondary;
+    font-size: 0.75rem; // 12px
+    transition: transform 0.3s ease;
+  }
+
+  &.select-arrow-active::after {
+    transform: translateY(-50%) rotate(180deg);
+  }
+}
+
+.select-items {
+  position: absolute;
+  background: rgba(61, 70, 64, 1.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem; // 8px
+  left: 0;
+  right: 0;
+  z-index: 999;
+
+  max-height: 12.5rem; // 200px
+  overflow-y: auto;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.3); // 4px 20px
+
+  &__group {
+    padding: 0.625rem; // 10px
+    color: white;
+    font-size: 0.875rem; // 14px
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba(74, 222, 128, 0.2);
+      color: $color-secondary;
+    }
+
+    &.selected {
+      background: rgba(74, 222, 128, 0.3);
+      color: $color-secondary;
+      font-weight: 500;
+
+      &::before {
+        content: '✓';
+        margin-right: 0.5rem; // 8px
+      }
+    }
+  }
+}
+
+.select-hide {
+  display: none;
+}
+
+.select-items::-webkit-scrollbar {
+  width: 0.375rem; // 6px
+}
+
+.select-items::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.1875rem; // 3px
+}
+
+.select-items::-webkit-scrollbar-thumb {
+  background: $color-secondary;
+  border-radius: 0.1875rem; // 3px
+
+  &:hover {
+    background: #22c55e;
+  }
+}
+
+@media (max-width: #{$breakpoint-md}) {
+  .select-wrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .custom-select {
+    width: 40%;
+  }
+}
+
+// Mobile landscape: apenas dropdown acima das tabs, resto atrás
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .select-wrapper {
+    z-index: 50 !important; // Atrás das tabs (z-index: 1000)
+  }
+
+  .custom-select {
+    z-index: 50 !important; // Select atrás das tabs durante scroll
+  }
+
+  // Apenas o dropdown fica acima das tabs quando aberto
+  .select-items {
+    z-index: 1100 !important; // Acima das tabs quando dropdown aberto
+  }
+}
